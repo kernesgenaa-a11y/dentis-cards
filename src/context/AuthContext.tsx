@@ -20,7 +20,7 @@ const DEFAULT_USERS: User[] = [
     id: 'admin-1',
     username: 'admin',
     password: 'admin123',
-    name: 'Super Administrator',
+    name: 'Супер Адміністратор',
     role: 'super-admin',
     createdAt: new Date().toISOString(),
   },
@@ -28,7 +28,7 @@ const DEFAULT_USERS: User[] = [
     id: 'doctor-1',
     username: 'doctor',
     password: 'doctor123',
-    name: 'Dr. Smith',
+    name: 'Лікар Стоматолог',
     role: 'doctor',
     createdAt: new Date().toISOString(),
   },
@@ -36,7 +36,7 @@ const DEFAULT_USERS: User[] = [
     id: 'receptionist-1',
     username: 'reception',
     password: 'reception123',
-    name: 'Jane Doe',
+    name: 'Адміністратор Клініки',
     role: 'administrator',
     createdAt: new Date().toISOString(),
   },
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setCurrentUserId(user.id);
       return { success: true };
     }
-    return { success: false, error: 'Invalid username or password' };
+    return { success: false, error: 'Невірний логін або пароль' };
   }, [users, setCurrentUserId]);
 
   const logout = useCallback(() => {
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const addUser = useCallback((userData: Omit<User, 'id' | 'createdAt'>) => {
     if (users.some(u => u.username === userData.username)) {
-      return { success: false, error: 'Username already exists' };
+      return { success: false, error: 'Такий логін вже існує' };
     }
     const newUser: User = {
       ...userData,

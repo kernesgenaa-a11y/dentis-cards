@@ -29,7 +29,7 @@ export function VisitList({ patientId }: VisitListProps) {
   return (
     <div className="space-y-3 py-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-muted-foreground">Visits</span>
+        <span className="text-xs font-medium text-muted-foreground">Візити</span>
         {canPerformAction('edit', 'patient') && (
           <Button
             variant="ghost"
@@ -38,14 +38,14 @@ export function VisitList({ patientId }: VisitListProps) {
             onClick={() => setIsAddingVisit(true)}
           >
             <Plus className="w-3 h-3 mr-1" />
-            Add
+            Додати
           </Button>
         )}
       </div>
 
       {futureVisits.length > 0 && (
         <div className="space-y-1">
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Upcoming</span>
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Заплановані</span>
           {futureVisits.map(visit => (
             <div
               key={visit.id}
@@ -53,7 +53,7 @@ export function VisitList({ patientId }: VisitListProps) {
             >
               <div className="flex items-center gap-2">
                 <Calendar className="w-3 h-3 text-primary" />
-                <span>{new Date(visit.date).toLocaleDateString()}</span>
+                <span>{new Date(visit.date).toLocaleDateString('uk-UA')}</span>
               </div>
               {canPerformAction('delete', 'patient') && (
                 <Button
@@ -72,7 +72,7 @@ export function VisitList({ patientId }: VisitListProps) {
 
       {pastVisits.length > 0 && (
         <div className="space-y-1">
-          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Past</span>
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Минулі</span>
           {pastVisits.slice(0, 3).map(visit => (
             <div
               key={visit.id}
@@ -80,7 +80,7 @@ export function VisitList({ patientId }: VisitListProps) {
             >
               <div className="flex items-center gap-2">
                 <Calendar className="w-3 h-3 text-muted-foreground" />
-                <span className="text-muted-foreground">{new Date(visit.date).toLocaleDateString()}</span>
+                <span className="text-muted-foreground">{new Date(visit.date).toLocaleDateString('uk-UA')}</span>
               </div>
               {visit.notes && (
                 <Badge variant="secondary" className="text-[10px]">
@@ -91,14 +91,14 @@ export function VisitList({ patientId }: VisitListProps) {
           ))}
           {pastVisits.length > 3 && (
             <span className="text-[10px] text-muted-foreground pl-2">
-              +{pastVisits.length - 3} more visits
+              +{pastVisits.length - 3} інших візитів
             </span>
           )}
         </div>
       )}
 
       {sortedVisits.length === 0 && (
-        <p className="text-xs text-muted-foreground py-2">No visits recorded</p>
+        <p className="text-xs text-muted-foreground py-2">Візитів немає</p>
       )}
 
       <VisitModal

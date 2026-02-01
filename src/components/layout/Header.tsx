@@ -1,6 +1,7 @@
 import React from 'react';
 import { useClinic } from '@/context/ClinicContext';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,17 +14,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Stethoscope, LogOut, User, Shield } from 'lucide-react';
+import { Stethoscope, LogOut, User, Shield, Moon, Sun } from 'lucide-react';
 
 export function Header() {
   const { clinicName, doctors, selectedDoctorId, setSelectedDoctorId } = useClinic();
   const { currentUser, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const getRoleBadge = (role: string) => {
     const variants: Record<string, { label: string; variant: 'default' | 'secondary' | 'outline' }> = {
-      'super-admin': { label: 'Super Admin', variant: 'default' },
-      'doctor': { label: 'Doctor', variant: 'secondary' },
-      'administrator': { label: 'Admin', variant: 'outline' },
+      'super-admin': { label: 'Супер Адмін', variant: 'default' },
+      'doctor': { label: 'Лікар', variant: 'secondary' },
+      'administrator': { label: 'Адміністратор', variant: 'outline' },
     };
     return variants[role] || { label: role, variant: 'outline' as const };
   };
@@ -40,7 +42,7 @@ export function Header() {
             </div>
             <div>
               <h1 className="font-heading font-bold text-lg leading-none">{clinicName}</h1>
-              <p className="text-xs opacity-80">Dental Management System</p>
+              <p className="text-xs opacity-80">Стоматологічна клініка</p>
             </div>
           </div>
         </div>
@@ -48,10 +50,10 @@ export function Header() {
         <div className="flex items-center gap-4">
           {/* Doctor Selection */}
           <div className="flex items-center gap-2">
-            <span className="text-sm opacity-80">Doctor:</span>
+            <span className="text-sm opacity-80">Лікар:</span>
             <Select value={selectedDoctorId || ''} onValueChange={setSelectedDoctorId}>
-              <SelectTrigger className="w-48 bg-white/10 border-white/20 text-primary-foreground">
-                <SelectValue placeholder="Select doctor" />
+              <SelectTrigger className="w-56 bg-white/10 border-white/20 text-primary-foreground">
+                <SelectValue placeholder="Оберіть лікаря" />
               </SelectTrigger>
               <SelectContent>
                 {doctors.map(doctor => (
@@ -65,6 +67,20 @@ export function Header() {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Theme Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="hover:bg-white/10"
+          >
+            {theme === 'light' ? (
+              <Moon className="w-5 h-5" />
+            ) : (
+              <Sun className="w-5 h-5" />
+            )}
+          </Button>
 
           {/* User Menu */}
           {currentUser && (
@@ -97,19 +113,19 @@ export function Header() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="gap-2">
                   <User className="w-4 h-4" />
-                  Profile
+                  Профіль
                 </DropdownMenuItem>
                 <DropdownMenuItem className="gap-2">
                   <Shield className="w-4 h-4" />
                   <div className="flex items-center justify-between flex-1">
-                    <span>Role</span>
+                    <span>Роль</span>
                     <Badge variant="outline" className="text-[10px]">{roleInfo?.label}</Badge>
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="gap-2 text-destructive" onClick={logout}>
                   <LogOut className="w-4 h-4" />
-                  Sign Out
+                  Вийти
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

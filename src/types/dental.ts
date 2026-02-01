@@ -69,18 +69,18 @@ export interface AppState {
 }
 
 export const DENTAL_TEMPLATES = [
-  { id: 'cavity', label: 'Cavity', description: 'Tooth decay requiring treatment' },
-  { id: 'filling', label: 'Filling', description: 'Existing or needed filling' },
-  { id: 'crown', label: 'Crown', description: 'Crown placement or needed' },
-  { id: 'root-canal', label: 'Root Canal', description: 'Root canal treatment' },
-  { id: 'extraction', label: 'Extraction', description: 'Tooth extraction needed or done' },
-  { id: 'implant', label: 'Implant', description: 'Dental implant' },
-  { id: 'bridge', label: 'Bridge', description: 'Dental bridge' },
-  { id: 'periodontal', label: 'Periodontal Issue', description: 'Gum disease or treatment' },
-  { id: 'sensitivity', label: 'Sensitivity', description: 'Tooth sensitivity' },
-  { id: 'fracture', label: 'Fracture', description: 'Cracked or fractured tooth' },
-  { id: 'missing', label: 'Missing', description: 'Missing tooth' },
-  { id: 'healthy', label: 'Healthy', description: 'No issues detected' },
+  { id: 'cavity', label: 'Карієс', description: 'Карієс, що потребує лікування' },
+  { id: 'filling', label: 'Пломба', description: 'Наявна або необхідна пломба' },
+  { id: 'crown', label: 'Коронка', description: 'Встановлена або необхідна коронка' },
+  { id: 'root-canal', label: 'Лікування каналів', description: 'Ендодонтичне лікування' },
+  { id: 'extraction', label: 'Видалення', description: 'Видалення зуба виконано або заплановано' },
+  { id: 'implant', label: 'Імплант', description: 'Дентальний імплант' },
+  { id: 'bridge', label: 'Міст', description: 'Зубний міст' },
+  { id: 'periodontal', label: 'Пародонтит', description: 'Захворювання ясен або лікування' },
+  { id: 'sensitivity', label: 'Чутливість', description: 'Підвищена чутливість зуба' },
+  { id: 'fracture', label: 'Тріщина', description: 'Тріщина або скол зуба' },
+  { id: 'missing', label: 'Відсутній', description: 'Відсутній зуб' },
+  { id: 'healthy', label: 'Здоровий', description: 'Проблем не виявлено' },
 ];
 
 // Adult dentition numbering (Universal Numbering System)

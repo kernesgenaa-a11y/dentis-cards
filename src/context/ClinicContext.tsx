@@ -27,39 +27,39 @@ interface ClinicContextType {
 const ClinicContext = createContext<ClinicContextType | undefined>(undefined);
 
 const DEFAULT_DOCTORS: Doctor[] = [
-  { id: 'doctor-1', name: 'Dr. Smith', specialty: 'General Dentistry' },
-  { id: 'doctor-2', name: 'Dr. Johnson', specialty: 'Orthodontics' },
+  { id: 'doctor-1', name: 'Верховський Олександр', specialty: 'Головний лікар' },
+  { id: 'doctor-2', name: 'Антон Євгенійович', specialty: 'Лікар-ортопед' },
 ];
 
 const DEFAULT_PATIENTS: Patient[] = [
   {
     id: 'patient-1',
-    firstName: 'John',
-    lastName: 'Williams',
-    phone: '+1 (555) 123-4567',
+    firstName: 'Іван',
+    lastName: 'Петренко',
+    phone: '+380 (50) 123-4567',
     dateOfBirth: '1985-03-15',
     doctorId: 'doctor-1',
     dentalChart: [
-      { toothNumber: 3, description: 'Cavity detected', templateId: 'cavity', files: [], notes: '', updatedAt: new Date().toISOString() },
-      { toothNumber: 14, description: 'Crown placed', templateId: 'crown', files: [], notes: '', updatedAt: new Date().toISOString() },
+      { toothNumber: 3, description: 'Карієс, що потребує лікування', templateId: 'cavity', files: [], notes: '', updatedAt: new Date().toISOString() },
+      { toothNumber: 14, description: 'Встановлена коронка', templateId: 'crown', files: [], notes: '', updatedAt: new Date().toISOString() },
     ],
     visits: [
-      { id: 'v1', date: '2025-01-15', type: 'past', notes: 'Regular checkup', doctorId: 'doctor-1' },
-      { id: 'v2', date: '2025-02-15', type: 'future', notes: 'Follow-up appointment', doctorId: 'doctor-1' },
+      { id: 'v1', date: '2025-01-15', type: 'past', notes: 'Плановий огляд', doctorId: 'doctor-1' },
+      { id: 'v2', date: '2025-02-15', type: 'future', notes: 'Контрольний візит', doctorId: 'doctor-1' },
     ],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
     id: 'patient-2',
-    firstName: 'Sarah',
-    lastName: 'Davis',
-    phone: '+1 (555) 987-6543',
+    firstName: 'Марія',
+    lastName: 'Коваленко',
+    phone: '+380 (67) 987-6543',
     dateOfBirth: '1990-07-22',
     doctorId: 'doctor-1',
     dentalChart: [],
     visits: [
-      { id: 'v3', date: '2025-01-20', type: 'past', notes: 'Cleaning', doctorId: 'doctor-1' },
+      { id: 'v3', date: '2025-01-20', type: 'past', notes: 'Професійна чистка', doctorId: 'doctor-1' },
     ],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -67,7 +67,7 @@ const DEFAULT_PATIENTS: Patient[] = [
 ];
 
 export function ClinicProvider({ children }: { children: React.ReactNode }) {
-  const [clinicName] = useLocalStorage('dental_clinic_name', 'DentalCare Clinic');
+  const [clinicName] = useLocalStorage('dental_clinic_name', 'Dentis');
   const [doctors, setDoctors] = useLocalStorage<Doctor[]>('dental_doctors', DEFAULT_DOCTORS);
   const [patients, setPatients] = useLocalStorage<Patient[]>('dental_patients', DEFAULT_PATIENTS);
   const [selectedDoctorId, setSelectedDoctorId] = useLocalStorage<string | null>('dental_selected_doctor', 'doctor-1');
