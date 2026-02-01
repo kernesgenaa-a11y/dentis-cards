@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Stethoscope, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Stethoscope, AlertCircle, Eye, EyeOff, Moon, Sun } from 'lucide-react';
 
 export function LoginPage() {
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,7 +27,7 @@ export function LoginPage() {
 
     const result = login(username, password);
     if (!result.success) {
-      setError(result.error || 'Login failed');
+      setError(result.error || 'Помилка входу');
     }
     
     setIsLoading(false);
@@ -33,20 +35,34 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
+      {/* Theme Toggle */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={toggleTheme}
+        className="absolute top-4 right-4"
+      >
+        {theme === 'light' ? (
+          <Moon className="w-5 h-5" />
+        ) : (
+          <Sun className="w-5 h-5" />
+        )}
+      </Button>
+
       <div className="w-full max-w-md animate-fade-in">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg mb-4">
             <Stethoscope className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">DentalCare Clinic</h1>
-          <p className="text-muted-foreground mt-1">Dental Management System</p>
+          <h1 className="font-heading text-2xl font-bold text-foreground">Dentis</h1>
+          <p className="text-muted-foreground mt-1">Стоматологічна клініка</p>
         </div>
 
         <Card className="shadow-medium border-0">
           <CardHeader className="text-center pb-2">
-            <CardTitle className="font-heading text-xl">Welcome Back</CardTitle>
-            <CardDescription>Sign in to access your dashboard</CardDescription>
+            <CardTitle className="font-heading text-xl">Ласкаво просимо</CardTitle>
+            <CardDescription>Увійдіть для доступу до системи</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,27 +74,27 @@ export function LoginPage() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">Логін</Label>
                 <Input
                   id="username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username"
+                  placeholder="Введіть логін"
                   required
                   autoComplete="username"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Пароль</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder="Введіть пароль"
                     required
                     autoComplete="current-password"
                     className="pr-10"
@@ -100,24 +116,24 @@ export function LoginPage() {
               </div>
 
               <Button type="submit" className="w-full btn-gradient" disabled={isLoading}>
-                {isLoading ? 'Signing in...' : 'Sign In'}
+                {isLoading ? 'Вхід...' : 'Увійти'}
               </Button>
             </form>
 
             {/* Demo Credentials */}
             <div className="mt-6 p-4 rounded-lg bg-muted/50">
-              <p className="text-xs font-medium text-muted-foreground mb-2">Demo Credentials:</p>
+              <p className="text-xs font-medium text-muted-foreground mb-2">Демо дані для входу:</p>
               <div className="space-y-1 text-xs">
-                <p><span className="font-medium">Super Admin:</span> admin / admin123</p>
-                <p><span className="font-medium">Doctor:</span> doctor / doctor123</p>
-                <p><span className="font-medium">Receptionist:</span> reception / reception123</p>
+                <p><span className="font-medium">Супер Адмін:</span> admin / admin123</p>
+                <p><span className="font-medium">Лікар:</span> doctor / doctor123</p>
+                <p><span className="font-medium">Адміністратор:</span> reception / reception123</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
-          Works offline • Data saved locally • Weekly backups
+          Працює офлайн • Дані зберігаються локально • Щотижневе резервне копіювання
         </p>
       </div>
     </div>

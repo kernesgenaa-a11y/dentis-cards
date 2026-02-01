@@ -92,17 +92,17 @@ export function ToothModal({ isOpen, onClose, toothNumber, record, onSave }: Too
             <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
               {toothNumber}
             </span>
-            Tooth #{toothNumber}
+            Зуб №{toothNumber}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           {/* Template Selection */}
           <div className="space-y-2">
-            <Label>Condition Template</Label>
+            <Label>Шаблон стану</Label>
             <Select value={templateId} onValueChange={handleTemplateChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a condition..." />
+                <SelectValue placeholder="Оберіть стан..." />
               </SelectTrigger>
               <SelectContent>
                 {DENTAL_TEMPLATES.map(template => (
@@ -119,29 +119,29 @@ export function ToothModal({ isOpen, onClose, toothNumber, record, onSave }: Too
 
           {/* Description */}
           <div className="space-y-2">
-            <Label>Description</Label>
+            <Label>Опис</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add a description..."
+              placeholder="Додайте опис..."
               rows={2}
             />
           </div>
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label>Additional Notes</Label>
+            <Label>Додаткові примітки</Label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add any additional notes..."
+              placeholder="Додайте примітки..."
               rows={3}
             />
           </div>
 
           {/* File Upload */}
           <div className="space-y-2">
-            <Label>Attachments</Label>
+            <Label>Вкладення</Label>
             <div className="border-2 border-dashed rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
               <input
                 type="file"
@@ -154,10 +154,10 @@ export function ToothModal({ isOpen, onClose, toothNumber, record, onSave }: Too
               <label htmlFor="file-upload" className="cursor-pointer">
                 <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  Click to upload files
+                  Натисніть для завантаження файлів
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Images, PDFs, or documents
+                  Зображення, PDF або документи
                 </p>
               </label>
             </div>
@@ -191,13 +191,13 @@ export function ToothModal({ isOpen, onClose, toothNumber, record, onSave }: Too
 
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={handleClear}>
-            Clear All
+            Очистити
           </Button>
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            Скасувати
           </Button>
           <Button onClick={handleSave}>
-            Save Changes
+            Зберегти
           </Button>
         </DialogFooter>
       </DialogContent>

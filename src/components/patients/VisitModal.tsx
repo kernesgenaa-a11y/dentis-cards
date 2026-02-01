@@ -42,12 +42,12 @@ export function VisitModal({ isOpen, onClose, patientId }: VisitModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-heading">Add Visit</DialogTitle>
+          <DialogTitle className="font-heading">Додати візит</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="visitDate">Date</Label>
+            <Label htmlFor="visitDate">Дата</Label>
             <Input
               id="visitDate"
               type="date"
@@ -58,35 +58,35 @@ export function VisitModal({ isOpen, onClose, patientId }: VisitModalProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>Visit Type</Label>
+            <Label>Тип візиту</Label>
             <RadioGroup value={type} onValueChange={(v) => setType(v as 'past' | 'future')}>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="future" id="future" />
-                <Label htmlFor="future" className="font-normal">Scheduled (Future)</Label>
+                <Label htmlFor="future" className="font-normal">Запланований (майбутній)</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="past" id="past" />
-                <Label htmlFor="past" className="font-normal">Completed (Past)</Label>
+                <Label htmlFor="past" className="font-normal">Завершений (минулий)</Label>
               </div>
             </RadioGroup>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes">Примітки</Label>
             <Textarea
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add visit notes..."
+              placeholder="Додайте примітки до візиту..."
               rows={3}
             />
           </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              Скасувати
             </Button>
-            <Button type="submit">Add Visit</Button>
+            <Button type="submit">Додати візит</Button>
           </DialogFooter>
         </form>
       </DialogContent>

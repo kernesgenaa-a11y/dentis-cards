@@ -70,18 +70,18 @@ export function PatientList() {
     <Card className="w-80 flex flex-col h-full animate-slide-in">
       <CardHeader className="border-b shrink-0">
         <div className="flex items-center justify-between mb-3">
-          <CardTitle className="font-heading text-lg">Patients</CardTitle>
+          <CardTitle className="font-heading text-lg">Пацієнти</CardTitle>
           {canPerformAction('add', 'patient') && (
             <Button size="sm" onClick={() => setIsAddingPatient(true)}>
               <Plus className="w-4 h-4 mr-1" />
-              Add
+              Додати
             </Button>
           )}
         </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name or date..."
+            placeholder="Пошук за ім'ям або датою..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
@@ -96,7 +96,7 @@ export function PatientList() {
               <div className="text-center py-8">
                 <User className="w-10 h-10 mx-auto text-muted-foreground mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  {searchQuery ? 'No patients found' : 'No patients yet'}
+                  {searchQuery ? 'Пацієнтів не знайдено' : 'Пацієнтів ще немає'}
                 </p>
               </div>
             ) : (
@@ -137,7 +137,7 @@ export function PatientList() {
                           {futureVisits > 0 && (
                             <div className="flex items-center gap-1 mt-1 text-xs text-primary">
                               <Calendar className="w-3 h-3" />
-                              {futureVisits} upcoming visit{futureVisits > 1 ? 's' : ''}
+                              {futureVisits} запланован{futureVisits === 1 ? 'ий' : 'их'} візит{futureVisits === 1 ? '' : 'ів'}
                             </div>
                           )}
                         </div>
@@ -215,15 +215,15 @@ export function PatientList() {
       <AlertDialog open={deletingPatient !== null} onOpenChange={() => setDeletingPatient(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Patient</AlertDialogTitle>
+            <AlertDialogTitle>Видалити пацієнта</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this patient? This action cannot be undone and will remove all associated dental records and visits.
+              Ви впевнені, що хочете видалити цього пацієнта? Цю дію неможливо скасувати. Будуть видалені всі пов'язані стоматологічні записи та візити.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Скасувати</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Delete
+              Видалити
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

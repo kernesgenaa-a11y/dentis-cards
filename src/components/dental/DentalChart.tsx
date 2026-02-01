@@ -22,8 +22,8 @@ export function DentalChart() {
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
             <User className="w-10 h-10 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">No Patient Selected</h3>
-          <p className="text-muted-foreground">Select a patient from the list to view their dental chart</p>
+          <h3 className="text-lg font-semibold text-foreground mb-2">Пацієнт не обраний</h3>
+          <p className="text-muted-foreground">Оберіть пацієнта зі списку для перегляду зубної карти</p>
         </div>
       </div>
     );
@@ -58,16 +58,16 @@ export function DentalChart() {
             <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                DOB: {new Date(patient.dateOfBirth).toLocaleDateString()}
+                Дата народження: {new Date(patient.dateOfBirth).toLocaleDateString('uk-UA')}
               </span>
               <span>{patient.phone}</span>
             </div>
           </div>
           <div className="flex gap-2">
             {issueCount > 0 && (
-              <Badge variant="destructive">{issueCount} Issues</Badge>
+              <Badge variant="destructive">{issueCount} проблем</Badge>
             )}
-            <Badge variant="secondary">32 Teeth</Badge>
+            <Badge variant="secondary">32 зуби</Badge>
           </div>
         </div>
       </CardHeader>
@@ -76,7 +76,7 @@ export function DentalChart() {
         <div className="min-w-[700px]">
           {/* Upper teeth */}
           <div className="mb-2">
-            <div className="text-xs font-medium text-muted-foreground mb-2 text-center">Upper Arch</div>
+            <div className="text-xs font-medium text-muted-foreground mb-2 text-center">Верхня щелепа</div>
             <div className="flex justify-center gap-1">
               {UPPER_TEETH.map((num) => (
                 <Tooth
@@ -94,7 +94,7 @@ export function DentalChart() {
           {/* Divider */}
           <div className="flex items-center justify-center my-4">
             <div className="flex-1 h-px bg-border" />
-            <div className="px-4 text-xs text-muted-foreground font-medium">DENTAL CHART</div>
+            <div className="px-4 text-xs text-muted-foreground font-medium">ЗУБНА КАРТА</div>
             <div className="flex-1 h-px bg-border" />
           </div>
           
@@ -112,7 +112,7 @@ export function DentalChart() {
                 />
               ))}
             </div>
-            <div className="text-xs font-medium text-muted-foreground mt-2 text-center">Lower Arch</div>
+            <div className="text-xs font-medium text-muted-foreground mt-2 text-center">Нижня щелепа</div>
           </div>
         </div>
         
@@ -120,15 +120,15 @@ export function DentalChart() {
         <div className="mt-8 flex items-center justify-center gap-6 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-tooth-healthy border border-border" />
-            <span className="text-muted-foreground">Healthy</span>
+            <span className="text-muted-foreground">Здоровий</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-tooth-issue border border-tooth-issue-border" />
-            <span className="text-muted-foreground">Has Notes/Files</span>
+            <span className="text-muted-foreground">Є записи/файли</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-tooth-selected border-2 border-tooth-selected-border" />
-            <span className="text-muted-foreground">Selected</span>
+            <span className="text-muted-foreground">Обраний</span>
           </div>
         </div>
       </CardContent>

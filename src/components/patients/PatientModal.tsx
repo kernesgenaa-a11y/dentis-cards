@@ -66,48 +66,48 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-heading">
-            {isEditing ? 'Edit Patient' : 'Add New Patient'}
+            {isEditing ? 'Редагувати пацієнта' : 'Додати нового пацієнта'}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">Ім'я</Label>
               <Input
                 id="firstName"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                placeholder="John"
+                placeholder="Іван"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">Прізвище</Label>
               <Input
                 id="lastName"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                placeholder="Doe"
+                placeholder="Петренко"
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phone">Номер телефону</Label>
             <Input
               id="phone"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+1 (555) 123-4567"
+              placeholder="+380 (50) 123-4567"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="dob">Date of Birth</Label>
+            <Label htmlFor="dob">Дата народження</Label>
             <Input
               id="dob"
               type="date"
@@ -119,10 +119,10 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              Скасувати
             </Button>
             <Button type="submit">
-              {isEditing ? 'Save Changes' : 'Add Patient'}
+              {isEditing ? 'Зберегти зміни' : 'Додати пацієнта'}
             </Button>
           </DialogFooter>
         </form>
