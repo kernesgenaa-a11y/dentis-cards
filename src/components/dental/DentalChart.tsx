@@ -120,7 +120,8 @@ export function DentalChart() {
         {/* Legend */}
         <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs">
           <div className="flex items-center gap-1 md:gap-2">
-            <span className="text-muted-foreground">Зображення зубів: 1.png - 32.png (здорові), 1w.png - 32w.png (з записами)</span>
+            <div className="w-4 h-4 rounded ring-2 ring-destructive ring-offset-1 ring-offset-background" />
+            <span className="text-muted-foreground">Зуб із записом</span>
           </div>
         </div>
 
