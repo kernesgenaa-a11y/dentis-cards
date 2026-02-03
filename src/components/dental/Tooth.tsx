@@ -25,31 +25,31 @@ export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothPro
   const toothType = getToothType(number);
   
   const crownStyles = {
-    molar: 'w-10 h-8 rounded-lg',
-    premolar: 'w-8 h-7 rounded-lg',
-    canine: 'w-6 h-8 rounded-t-full rounded-b-lg',
-    incisor: 'w-6 h-7 rounded-t-full rounded-b-md',
+    molar: 'w-6 h-5 md:w-10 md:h-8 rounded-lg',
+    premolar: 'w-5 h-4 md:w-8 md:h-7 rounded-lg',
+    canine: 'w-4 h-5 md:w-6 md:h-8 rounded-t-full rounded-b-lg',
+    incisor: 'w-4 h-4 md:w-6 md:h-7 rounded-t-full rounded-b-md',
   };
 
   const rootStyles = {
-    molar: isUpper ? 'w-8 h-5' : 'w-8 h-5',
-    premolar: isUpper ? 'w-6 h-4' : 'w-6 h-4',
-    canine: isUpper ? 'w-4 h-6' : 'w-4 h-6',
-    incisor: isUpper ? 'w-4 h-5' : 'w-4 h-5',
+    molar: isUpper ? 'w-5 h-3 md:w-8 md:h-5' : 'w-5 h-3 md:w-8 md:h-5',
+    premolar: isUpper ? 'w-4 h-2 md:w-6 md:h-4' : 'w-4 h-2 md:w-6 md:h-4',
+    canine: isUpper ? 'w-2 h-4 md:w-4 md:h-6' : 'w-2 h-4 md:w-4 md:h-6',
+    incisor: isUpper ? 'w-2 h-3 md:w-4 md:h-5' : 'w-2 h-3 md:w-4 md:h-5',
   };
 
   return (
     <button
       onClick={onClick}
       className={cn(
-        'flex flex-col items-center gap-0.5 p-1.5 rounded-lg transition-all duration-200',
+        'flex flex-col items-center gap-0 md:gap-0.5 p-0.5 md:p-1.5 rounded-lg transition-all duration-200',
         'hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50',
         isSelected && 'ring-2 ring-primary bg-tooth-selected'
       )}
     >
       {/* Tooth number */}
       <span className={cn(
-        'text-[10px] font-medium',
+        'text-[8px] md:text-[10px] font-medium',
         hasIssue ? 'text-destructive' : 'text-muted-foreground',
         isUpper ? 'order-first' : 'order-last'
       )}>
@@ -88,20 +88,20 @@ export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothPro
           {toothType === 'molar' ? (
             <>
               <div className={cn(
-                'w-2 bg-tooth-healthy border border-border rounded-b-full',
-                isUpper ? 'h-4 rounded-t-none' : 'h-4 rounded-b-none rounded-t-full',
+                'w-1 md:w-2 bg-tooth-healthy border border-border rounded-b-full',
+                isUpper ? 'h-2 md:h-4 rounded-t-none' : 'h-2 md:h-4 rounded-b-none rounded-t-full',
                 hasIssue && 'bg-tooth-issue border-tooth-issue-border',
                 isSelected && 'bg-tooth-selected border-tooth-selected-border'
               )} />
               <div className={cn(
-                'w-2 bg-tooth-healthy border border-border rounded-b-full',
-                isUpper ? 'h-5 rounded-t-none' : 'h-5 rounded-b-none rounded-t-full',
+                'w-1 md:w-2 bg-tooth-healthy border border-border rounded-b-full',
+                isUpper ? 'h-3 md:h-5 rounded-t-none' : 'h-3 md:h-5 rounded-b-none rounded-t-full',
                 hasIssue && 'bg-tooth-issue border-tooth-issue-border',
                 isSelected && 'bg-tooth-selected border-tooth-selected-border'
               )} />
               <div className={cn(
-                'w-2 bg-tooth-healthy border border-border rounded-b-full',
-                isUpper ? 'h-4 rounded-t-none' : 'h-4 rounded-b-none rounded-t-full',
+                'w-1 md:w-2 bg-tooth-healthy border border-border rounded-b-full',
+                isUpper ? 'h-2 md:h-4 rounded-t-none' : 'h-2 md:h-4 rounded-b-none rounded-t-full',
                 hasIssue && 'bg-tooth-issue border-tooth-issue-border',
                 isSelected && 'bg-tooth-selected border-tooth-selected-border'
               )} />
@@ -109,14 +109,14 @@ export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothPro
           ) : toothType === 'premolar' ? (
             <>
               <div className={cn(
-                'w-2 bg-tooth-healthy border border-border',
-                isUpper ? 'h-3 rounded-b-full' : 'h-3 rounded-t-full',
+                'w-1 md:w-2 bg-tooth-healthy border border-border',
+                isUpper ? 'h-2 md:h-3 rounded-b-full' : 'h-2 md:h-3 rounded-t-full',
                 hasIssue && 'bg-tooth-issue border-tooth-issue-border',
                 isSelected && 'bg-tooth-selected border-tooth-selected-border'
               )} />
               <div className={cn(
-                'w-2 bg-tooth-healthy border border-border',
-                isUpper ? 'h-4 rounded-b-full' : 'h-4 rounded-t-full',
+                'w-1 md:w-2 bg-tooth-healthy border border-border',
+                isUpper ? 'h-2 md:h-4 rounded-b-full' : 'h-2 md:h-4 rounded-t-full',
                 hasIssue && 'bg-tooth-issue border-tooth-issue-border',
                 isSelected && 'bg-tooth-selected border-tooth-selected-border'
               )} />

@@ -21,7 +21,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export function PatientList() {
+interface PatientListProps {
+  onPatientSelect?: () => void;
+}
+
+export function PatientList({ onPatientSelect }: PatientListProps) {
   const { 
     patients, 
     selectedDoctorId, 
@@ -55,6 +59,7 @@ export function PatientList() {
 
   const handlePatientClick = (patientId: string) => {
     setSelectedPatientId(patientId);
+    onPatientSelect?.();
   };
 
   const handleDeleteConfirm = () => {
@@ -67,7 +72,7 @@ export function PatientList() {
   const selectedPatient = patients.find(p => p.id === selectedPatientId);
 
   return (
-    <Card className="w-80 flex flex-col h-full animate-slide-in">
+    <Card className="w-full md:w-80 flex flex-col h-full animate-slide-in border-0 md:border shadow-none md:shadow-sm">
       <CardHeader className="border-b shrink-0">
         <div className="flex items-center justify-between mb-3">
           <CardTitle className="font-heading text-lg">Пацієнти</CardTitle>
