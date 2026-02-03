@@ -13,130 +13,42 @@ interface ToothProps {
 export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothProps) {
   const hasIssue = record && (record.description || record.files.length > 0);
   
-  // Determine tooth type for different shapes
-  const getToothType = (num: number): 'molar' | 'premolar' | 'canine' | 'incisor' => {
-    const position = num <= 16 ? num : 33 - num;
-    if (position <= 3 || position >= 14) return 'molar';
-    if (position <= 5 || position >= 12) return 'premolar';
-    if (position === 6 || position === 11) return 'canine';
-    return 'incisor';
-  };
-
-  const toothType = getToothType(number);
-  
-  const crownStyles = {
-    molar: 'w-6 h-5 md:w-10 md:h-8 rounded-lg',
-    premolar: 'w-5 h-4 md:w-8 md:h-7 rounded-lg',
-    canine: 'w-4 h-5 md:w-6 md:h-8 rounded-t-full rounded-b-lg',
-    incisor: 'w-4 h-4 md:w-6 md:h-7 rounded-t-full rounded-b-md',
-  };
-
-  const rootStyles = {
-    molar: isUpper ? 'w-5 h-3 md:w-8 md:h-5' : 'w-5 h-3 md:w-8 md:h-5',
-    premolar: isUpper ? 'w-4 h-2 md:w-6 md:h-4' : 'w-4 h-2 md:w-6 md:h-4',
-    canine: isUpper ? 'w-2 h-4 md:w-4 md:h-6' : 'w-2 h-4 md:w-4 md:h-6',
-    incisor: isUpper ? 'w-2 h-3 md:w-4 md:h-5' : 'w-2 h-3 md:w-4 md:h-5',
-  };
+  // Get the correct image based on whether there's an issue
+  const imageName = hasIssue ? `${number}w.png` : `${number}.png`;
+  const imagePath = `/teeth/${imageName}`;
 
   return (
     <button
       onClick={onClick}
       className={cn(
         'flex flex-col items-center gap-0 md:gap-0.5 p-0.5 md:p-1.5 rounded-lg transition-all duration-200',
-        'hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50',
-        isSelected && 'ring-2 ring-primary bg-tooth-selected'
+        'hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50'
       )}
     >
       {/* Tooth number */}
       <span className={cn(
-        'text-[8px] md:text-[10px] font-medium',
-        hasIssue ? 'text-destructive' : 'text-muted-foreground',
+        'text-[8px] md:text-[10px] font-medium text-muted-foreground',
         isUpper ? 'order-first' : 'order-last'
       )}>
         {number}
       </span>
       
-      {/* Crown and Root container */}
+      {/* Tooth image */}
       <div className={cn(
-        'flex flex-col items-center',
-        !isUpper && 'flex-col-reverse'
+        'flex items-center justify-center',
+        !isUpper && 'rotate-180'
       )}>
-        {/* Crown */}
-        <div
-          className={cn(
-            'border-2 transition-all duration-200 shadow-tooth',
-            crownStyles[toothType],
-            hasIssue 
-              ? 'bg-tooth-issue border-tooth-issue-border' 
-              : 'bg-tooth-healthy border-border',
-            isSelected && 'border-tooth-selected-border bg-tooth-selected'
-          )}
-        >
-          {/* Inner crown detail */}
-          <div className="w-full h-full flex items-center justify-center opacity-30">
-            {toothType === 'molar' && (
-              <div className="w-4 h-3 border border-current rounded-sm" />
-            )}
-          </div>
-        </div>
-        
-        {/* Root(s) */}
-        <div className={cn(
-          'flex gap-0.5',
-          isUpper ? 'mt-0' : 'mb-0'
-        )}>
-          {toothType === 'molar' ? (
-            <>
-              <div className={cn(
-                'w-1 md:w-2 bg-tooth-healthy border border-border rounded-b-full',
-                isUpper ? 'h-2 md:h-4 rounded-t-none' : 'h-2 md:h-4 rounded-b-none rounded-t-full',
-                hasIssue && 'bg-tooth-issue border-tooth-issue-border',
-                isSelected && 'bg-tooth-selected border-tooth-selected-border'
-              )} />
-              <div className={cn(
-                'w-1 md:w-2 bg-tooth-healthy border border-border rounded-b-full',
-                isUpper ? 'h-3 md:h-5 rounded-t-none' : 'h-3 md:h-5 rounded-b-none rounded-t-full',
-                hasIssue && 'bg-tooth-issue border-tooth-issue-border',
-                isSelected && 'bg-tooth-selected border-tooth-selected-border'
-              )} />
-              <div className={cn(
-                'w-1 md:w-2 bg-tooth-healthy border border-border rounded-b-full',
-                isUpper ? 'h-2 md:h-4 rounded-t-none' : 'h-2 md:h-4 rounded-b-none rounded-t-full',
-                hasIssue && 'bg-tooth-issue border-tooth-issue-border',
-                isSelected && 'bg-tooth-selected border-tooth-selected-border'
-              )} />
-            </>
-          ) : toothType === 'premolar' ? (
-            <>
-              <div className={cn(
-                'w-1 md:w-2 bg-tooth-healthy border border-border',
-                isUpper ? 'h-2 md:h-3 rounded-b-full' : 'h-2 md:h-3 rounded-t-full',
-                hasIssue && 'bg-tooth-issue border-tooth-issue-border',
-                isSelected && 'bg-tooth-selected border-tooth-selected-border'
-              )} />
-              <div className={cn(
-                'w-1 md:w-2 bg-tooth-healthy border border-border',
-                isUpper ? 'h-2 md:h-4 rounded-b-full' : 'h-2 md:h-4 rounded-t-full',
-                hasIssue && 'bg-tooth-issue border-tooth-issue-border',
-                isSelected && 'bg-tooth-selected border-tooth-selected-border'
-              )} />
-            </>
-          ) : (
-            <div className={cn(
-              rootStyles[toothType],
-              'bg-tooth-healthy border border-border',
-              isUpper ? 'rounded-b-full' : 'rounded-t-full',
-              hasIssue && 'bg-tooth-issue border-tooth-issue-border',
-              isSelected && 'bg-tooth-selected border-tooth-selected-border'
-            )} />
-          )}
-        </div>
+        <img 
+          src={imagePath}
+          alt={`Зуб ${number}`}
+          className="w-6 h-10 md:w-10 md:h-16 object-contain"
+          onError={(e) => {
+            // Fallback if image doesn't exist yet
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+          }}
+        />
       </div>
-      
-      {/* Issue indicator dot */}
-      {hasIssue && (
-        <div className="absolute -top-1 -right-1 w-2 h-2 bg-destructive rounded-full animate-pulse-soft" />
-      )}
     </button>
   );
 }
