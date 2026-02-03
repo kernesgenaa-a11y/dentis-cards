@@ -47,8 +47,12 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
   const [deletingPatient, setDeletingPatient] = useState<string | null>(null);
 
   const filteredPatients = useMemo(() => {
-    if (!selectedDoctorId) return [];
-    const doctorPatients = getPatientsByDoctor(selectedDoctorId);
+    // If "all" is selected, show all patients
+    const doctorPatients = selectedDoctorId === 'all' 
+      ? patients 
+      : selectedDoctorId 
+        ? getPatientsByDoctor(selectedDoctorId) 
+        : [];
     
     if (!searchQuery.trim()) return doctorPatients;
     
@@ -110,7 +114,6 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
               </div>
             ) : (
               filteredPatients.map(patient => {
-                const issueCount = patient.dentalChart.filter(t => t.description || t.files.length > 0).length;
                 const isSelected = selectedPatientId === patient.id;
                 
                 return (
@@ -124,17 +127,10 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
                       onClick={() => handlePatientClick(patient.id)}
                     >
                       <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-medium truncate">
-                              {patient.firstName} {patient.lastName}
-                            </h4>
-                            {issueCount > 0 && (
-                              <Badge variant="destructive" className="text-[10px] h-5">
-                                {issueCount}
-                              </Badge>
-                            )}
-                          </div>
+                          <div className="flex-1 min-w-0">
+                          <h4 className="font-medium truncate">
+                            {patient.firstName} {patient.lastName}
+                          </h4>
                           <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Phone className="w-3 h-3" />
