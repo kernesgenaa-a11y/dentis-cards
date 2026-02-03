@@ -70,6 +70,9 @@ export function Header() {
                 <SelectValue placeholder="Оберіть лікаря" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">
+                  <span className="text-sm font-medium">Всі лікарі</span>
+                </SelectItem>
                 {doctors.map(doctor => <SelectItem key={doctor.id} value={doctor.id}>
                     <div className="flex flex-col">
                       <span className="text-sm">{doctor.name}</span>
