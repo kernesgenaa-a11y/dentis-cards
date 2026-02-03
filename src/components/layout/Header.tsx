@@ -48,32 +48,32 @@ export function Header() {
   };
   const roleInfo = currentUser ? getRoleBadge(currentUser.role) : null;
   return <header className="header-gradient text-primary-foreground shadow-lg">
-      <div className="flex items-center justify-between h-16 px-6 text-destructive-foreground bg-[#137a7c]">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-              <Stethoscope className="w-6 h-6" />
+      <div className="flex items-center justify-between h-14 md:h-16 px-3 md:px-6 text-destructive-foreground bg-[#137a7c]">
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white/20 flex items-center justify-center">
+              <Stethoscope className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
-              <h1 className="font-heading font-bold text-lg leading-none">{clinicName}</h1>
-              <p className="text-xs opacity-80">Стоматологічна клініка</p>
+              <h1 className="font-heading font-bold text-base md:text-lg leading-none">{clinicName}</h1>
+              <p className="text-[10px] md:text-xs opacity-80 hidden sm:block">Стоматологічна клініка</p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1 md:gap-4">
           {/* Doctor Selection */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm opacity-80">Лікар:</span>
+          <div className="flex items-center gap-1 md:gap-2">
+            <span className="text-xs md:text-sm opacity-80 hidden md:inline">Лікар:</span>
             <Select value={selectedDoctorId || ''} onValueChange={setSelectedDoctorId}>
-              <SelectTrigger className="w-56 bg-white/10 border-white/20 text-primary-foreground">
+              <SelectTrigger className="w-32 md:w-56 bg-white/10 border-white/20 text-primary-foreground text-xs md:text-sm h-8 md:h-10">
                 <SelectValue placeholder="Оберіть лікаря" />
               </SelectTrigger>
               <SelectContent>
                 {doctors.map(doctor => <SelectItem key={doctor.id} value={doctor.id}>
                     <div className="flex flex-col">
-                      <span>{doctor.name}</span>
-                      <span className="text-xs text-muted-foreground">{doctor.specialty}</span>
+                      <span className="text-sm">{doctor.name}</span>
+                      <span className="text-xs text-muted-foreground hidden md:block">{doctor.specialty}</span>
                     </div>
                   </SelectItem>)}
               </SelectContent>
@@ -81,20 +81,20 @@ export function Header() {
           </div>
 
           {/* Theme Toggle */}
-          <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-white/10">
-            {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+          <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-white/10 h-8 w-8 md:h-10 md:w-10">
+            {theme === 'light' ? <Moon className="w-4 h-4 md:w-5 md:h-5" /> : <Sun className="w-4 h-4 md:w-5 md:h-5" />}
           </Button>
 
           {/* User Menu */}
           {currentUser && <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 hover:bg-white/10">
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-white/20 text-primary-foreground text-sm">
+                <Button variant="ghost" className="flex items-center gap-1 md:gap-2 hover:bg-white/10 px-1 md:px-2">
+                  <Avatar className="w-7 h-7 md:w-8 md:h-8">
+                    <AvatarFallback className="bg-white/20 text-primary-foreground text-xs md:text-sm">
                       {currentUser.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="text-left hidden sm:block">
+                  <div className="text-left hidden lg:block">
                     <p className="text-sm font-medium leading-none">{currentUser.name}</p>
                     <Badge variant={roleInfo?.variant} className="mt-0.5 text-[10px] h-4 bg-white/20 text-primary-foreground border-white/30">
                       {roleInfo?.label}

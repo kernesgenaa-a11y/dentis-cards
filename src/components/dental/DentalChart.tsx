@@ -49,35 +49,35 @@ export function DentalChart() {
 
   return (
     <Card className="flex-1 overflow-hidden animate-fade-in">
-      <CardHeader className="border-b bg-card">
-        <div className="flex items-center justify-between">
+      <CardHeader className="border-b bg-card p-3 md:p-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
           <div>
-            <CardTitle className="font-heading text-xl">
+            <CardTitle className="font-heading text-lg md:text-xl">
               {patient.firstName} {patient.lastName}
             </CardTitle>
-            <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+            <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4 mt-1 text-xs md:text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                Дата народження: {new Date(patient.dateOfBirth).toLocaleDateString('uk-UA')}
+                <Calendar className="w-3 h-3 md:w-4 md:h-4" />
+                {new Date(patient.dateOfBirth).toLocaleDateString('uk-UA')}
               </span>
               <span>{patient.phone}</span>
             </div>
           </div>
           <div className="flex gap-2">
             {issueCount > 0 && (
-              <Badge variant="destructive">{issueCount} проблем</Badge>
+              <Badge variant="destructive" className="text-xs">{issueCount} проблем</Badge>
             )}
-            <Badge variant="secondary">32 зуби</Badge>
+            <Badge variant="secondary" className="text-xs">32 зуби</Badge>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="p-6 overflow-auto">
-        <div className="min-w-[700px]">
+      <CardContent className="p-2 md:p-6 overflow-auto">
+        <div className="min-w-[320px] md:min-w-[700px]">
           {/* Upper teeth */}
           <div className="mb-2">
-            <div className="text-xs font-medium text-muted-foreground mb-2 text-center">Верхня щелепа</div>
-            <div className="flex justify-center gap-1">
+            <div className="text-[10px] md:text-xs font-medium text-muted-foreground mb-2 text-center">Верхня щелепа</div>
+            <div className="flex justify-center gap-0.5 md:gap-1 flex-wrap md:flex-nowrap">
               {UPPER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -92,15 +92,15 @@ export function DentalChart() {
           </div>
           
           {/* Divider */}
-          <div className="flex items-center justify-center my-4">
+          <div className="flex items-center justify-center my-2 md:my-4">
             <div className="flex-1 h-px bg-border" />
-            <div className="px-4 text-xs text-muted-foreground font-medium">ЗУБНА КАРТА</div>
+            <div className="px-2 md:px-4 text-[10px] md:text-xs text-muted-foreground font-medium">ЗУБНА КАРТА</div>
             <div className="flex-1 h-px bg-border" />
           </div>
           
           {/* Lower teeth */}
           <div>
-            <div className="flex justify-center gap-1">
+            <div className="flex justify-center gap-0.5 md:gap-1 flex-wrap md:flex-nowrap">
               {LOWER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -112,22 +112,22 @@ export function DentalChart() {
                 />
               ))}
             </div>
-            <div className="text-xs font-medium text-muted-foreground mt-2 text-center">Нижня щелепа</div>
+            <div className="text-[10px] md:text-xs font-medium text-muted-foreground mt-2 text-center">Нижня щелепа</div>
           </div>
         </div>
         
         {/* Legend */}
-        <div className="mt-8 flex items-center justify-center gap-6 text-xs">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-tooth-healthy border border-border" />
+        <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs">
+          <div className="flex items-center gap-1 md:gap-2">
+            <div className="w-3 h-3 md:w-4 md:h-4 rounded bg-tooth-healthy border border-border" />
             <span className="text-muted-foreground">Здоровий</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-tooth-issue border border-tooth-issue-border" />
-            <span className="text-muted-foreground">Є записи/файли</span>
+          <div className="flex items-center gap-1 md:gap-2">
+            <div className="w-3 h-3 md:w-4 md:h-4 rounded bg-tooth-issue border border-tooth-issue-border" />
+            <span className="text-muted-foreground">Є записи</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-tooth-selected border-2 border-tooth-selected-border" />
+          <div className="flex items-center gap-1 md:gap-2">
+            <div className="w-3 h-3 md:w-4 md:h-4 rounded bg-tooth-selected border-2 border-tooth-selected-border" />
             <span className="text-muted-foreground">Обраний</span>
           </div>
         </div>
