@@ -119,16 +119,7 @@ export function DentalChart() {
         {/* Legend */}
         <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs">
           <div className="flex items-center gap-1 md:gap-2">
-            <div className="w-3 h-3 md:w-4 md:h-4 rounded bg-tooth-healthy border border-border" />
-            <span className="text-muted-foreground">Здоровий</span>
-          </div>
-          <div className="flex items-center gap-1 md:gap-2">
-            <div className="w-3 h-3 md:w-4 md:h-4 rounded bg-tooth-issue border border-tooth-issue-border" />
-            <span className="text-muted-foreground">Є записи</span>
-          </div>
-          <div className="flex items-center gap-1 md:gap-2">
-            <div className="w-3 h-3 md:w-4 md:h-4 rounded bg-tooth-selected border-2 border-tooth-selected-border" />
-            <span className="text-muted-foreground">Обраний</span>
+            <span className="text-muted-foreground">Зображення зубів: 1.png - 32.png (здорові), 1w.png - 32w.png (з записами)</span>
           </div>
         </div>
       </CardContent>
