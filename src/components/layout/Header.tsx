@@ -6,35 +6,49 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Stethoscope, LogOut, User, Shield, Moon, Sun } from 'lucide-react';
-
 export function Header() {
-  const { clinicName, doctors, selectedDoctorId, setSelectedDoctorId } = useClinic();
-  const { currentUser, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
-
+  const {
+    clinicName,
+    doctors,
+    selectedDoctorId,
+    setSelectedDoctorId
+  } = useClinic();
+  const {
+    currentUser,
+    logout
+  } = useAuth();
+  const {
+    theme,
+    toggleTheme
+  } = useTheme();
   const getRoleBadge = (role: string) => {
-    const variants: Record<string, { label: string; variant: 'default' | 'secondary' | 'outline' }> = {
-      'super-admin': { label: 'Супер Адмін', variant: 'default' },
-      'doctor': { label: 'Лікар', variant: 'secondary' },
-      'administrator': { label: 'Адміністратор', variant: 'outline' },
+    const variants: Record<string, {
+      label: string;
+      variant: 'default' | 'secondary' | 'outline';
+    }> = {
+      'super-admin': {
+        label: 'Супер Адмін',
+        variant: 'default'
+      },
+      'doctor': {
+        label: 'Лікар',
+        variant: 'secondary'
+      },
+      'administrator': {
+        label: 'Адміністратор',
+        variant: 'outline'
+      }
     };
-    return variants[role] || { label: role, variant: 'outline' as const };
+    return variants[role] || {
+      label: role,
+      variant: 'outline' as const
+    };
   };
-
   const roleInfo = currentUser ? getRoleBadge(currentUser.role) : null;
-
-  return (
-    <header className="header-gradient text-primary-foreground shadow-lg">
-      <div className="flex items-center justify-between h-16 px-6">
+  return <header className="header-gradient text-primary-foreground shadow-lg">
+      <div className="flex items-center justify-between h-16 px-6 bg-[#27c1c4] text-success-foreground">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
@@ -56,35 +70,23 @@ export function Header() {
                 <SelectValue placeholder="Оберіть лікаря" />
               </SelectTrigger>
               <SelectContent>
-                {doctors.map(doctor => (
-                  <SelectItem key={doctor.id} value={doctor.id}>
+                {doctors.map(doctor => <SelectItem key={doctor.id} value={doctor.id}>
                     <div className="flex flex-col">
                       <span>{doctor.name}</span>
                       <span className="text-xs text-muted-foreground">{doctor.specialty}</span>
                     </div>
-                  </SelectItem>
-                ))}
+                  </SelectItem>)}
               </SelectContent>
             </Select>
           </div>
 
           {/* Theme Toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            className="hover:bg-white/10"
-          >
-            {theme === 'light' ? (
-              <Moon className="w-5 h-5" />
-            ) : (
-              <Sun className="w-5 h-5" />
-            )}
+          <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-white/10">
+            {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
           </Button>
 
           {/* User Menu */}
-          {currentUser && (
-            <DropdownMenu>
+          {currentUser && <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center gap-2 hover:bg-white/10">
                   <Avatar className="w-8 h-8">
@@ -94,10 +96,7 @@ export function Header() {
                   </Avatar>
                   <div className="text-left hidden sm:block">
                     <p className="text-sm font-medium leading-none">{currentUser.name}</p>
-                    <Badge 
-                      variant={roleInfo?.variant} 
-                      className="mt-0.5 text-[10px] h-4 bg-white/20 text-primary-foreground border-white/30"
-                    >
+                    <Badge variant={roleInfo?.variant} className="mt-0.5 text-[10px] h-4 bg-white/20 text-primary-foreground border-white/30">
                       {roleInfo?.label}
                     </Badge>
                   </div>
@@ -128,10 +127,8 @@ export function Header() {
                   Вийти
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+            </DropdownMenu>}
         </div>
       </div>
-    </header>
-  );
+    </header>;
 }
