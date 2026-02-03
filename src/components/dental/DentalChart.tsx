@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Tooth } from './Tooth';
 import { ToothModal } from './ToothModal';
+import { VisitHistory } from './VisitHistory';
 import { UPPER_TEETH, LOWER_TEETH, ToothRecord } from '@/types/dental';
 import { useClinic } from '@/context/ClinicContext';
 import { useAuth } from '@/context/AuthContext';
@@ -122,6 +123,9 @@ export function DentalChart() {
             <span className="text-muted-foreground">Зображення зубів: 1.png - 32.png (здорові), 1w.png - 32w.png (з записами)</span>
           </div>
         </div>
+
+        {/* Visit History */}
+        <VisitHistory patientId={patient.id} />
       </CardContent>
 
       {/* Tooth Modal */}

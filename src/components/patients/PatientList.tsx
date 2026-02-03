@@ -6,9 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, Plus, User, Phone, Calendar, ChevronRight, Trash2, Edit2 } from 'lucide-react';
+import { Search, Plus, User, Phone, MoreVertical, Trash2, Edit2 } from 'lucide-react';
 import { PatientModal } from './PatientModal';
-import { VisitList } from './VisitList';
 import { cn } from '@/lib/utils';
 import {
   AlertDialog,
@@ -20,6 +19,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface PatientListProps {
   onPatientSelect?: () => void;
@@ -40,7 +45,6 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
   const [isAddingPatient, setIsAddingPatient] = useState(false);
   const [editingPatient, setEditingPatient] = useState<string | null>(null);
   const [deletingPatient, setDeletingPatient] = useState<string | null>(null);
-  const [expandedPatient, setExpandedPatient] = useState<string | null>(null);
 
   const filteredPatients = useMemo(() => {
     if (!selectedDoctorId) return [];
@@ -107,9 +111,7 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
             ) : (
               filteredPatients.map(patient => {
                 const issueCount = patient.dentalChart.filter(t => t.description || t.files.length > 0).length;
-                const futureVisits = patient.visits.filter(v => v.type === 'future').length;
                 const isSelected = selectedPatientId === patient.id;
-                const isExpanded = expandedPatient === patient.id;
                 
                 return (
                   <div key={patient.id} className="animate-fade-in">
@@ -139,65 +141,50 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
                               {patient.phone}
                             </span>
                           </div>
-                          {futureVisits > 0 && (
-                            <div className="flex items-center gap-1 mt-1 text-xs text-primary">
-                              <Calendar className="w-3 h-3" />
-                              {futureVisits} запланован{futureVisits === 1 ? 'ий' : 'их'} візит{futureVisits === 1 ? '' : 'ів'}
-                            </div>
-                          )}
                         </div>
                         
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          {canPerformAction('edit', 'patient') && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingPatient(patient.id);
-                              }}
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </Button>
-                          )}
-                          {canPerformAction('delete', 'patient') && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7 text-destructive hover:text-destructive"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setDeletingPatient(patient.id);
-                              }}
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </Button>
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setExpandedPatient(isExpanded ? null : patient.id);
-                            }}
-                          >
-                            <ChevronRight className={cn(
-                              'w-4 h-4 transition-transform',
-                              isExpanded && 'rotate-90'
-                            )} />
-                          </Button>
-                        </div>
+                        {/* Three-dot menu */}
+                        {(canPerformAction('edit', 'patient') || canPerformAction('delete', 'patient')) && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              {canPerformAction('edit', 'patient') && (
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingPatient(patient.id);
+                                  }}
+                                >
+                                  <Edit2 className="w-4 h-4 mr-2" />
+                                  Редагувати
+                                </DropdownMenuItem>
+                              )}
+                              {canPerformAction('delete', 'patient') && (
+                                <DropdownMenuItem
+                                  className="text-destructive focus:text-destructive"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeletingPatient(patient.id);
+                                  }}
+                                >
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  Видалити
+                                </DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
                       </div>
                     </div>
-                    
-                    {/* Expanded visits section */}
-                    {isExpanded && (
-                      <div className="ml-3 mt-1 mb-2 pl-3 border-l-2 border-muted animate-fade-in">
-                        <VisitList patientId={patient.id} />
-                      </div>
-                    )}
                   </div>
                 );
               })
