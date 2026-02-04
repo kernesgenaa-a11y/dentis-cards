@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ToothRecord } from '@/types/dental';
 
@@ -24,53 +24,126 @@ const LOWER_RIGHT_MAPPING: Record<number, number> = {
 
 // Mapping for left side (17-24) - mirrors right side
 const LOWER_LEFT_MAPPING: Record<number, number> = {
-  17: 24, // mirrors 32
-  18: 23, // mirrors 31
-  19: 22, // mirrors 30
-  20: 22, // mirrors 29
-  21: 21, // mirrors 28
-  22: 20, // mirrors 27
-  23: 19, // mirrors 26
-  24: 18, // mirrors 25
+  17: 24,
+  18: 23,
+  19: 22,
+  20: 22,
+  21: 21,
+  22: 20,
+  23: 19,
+  24: 18,
 };
 
 // Get the image number and whether it should be mirrored
 function getToothImage(toothNumber: number, isUpper: boolean): { imageNumber: number; mirrored: boolean } {
   if (isUpper) {
-    // Upper teeth 1-16
     if (toothNumber >= 1 && toothNumber <= 8) {
-      // Right side: 1-8 use 1.png-8.png
       return { imageNumber: toothNumber, mirrored: false };
     } else {
-      // Left side: 9-16 use mirrored 8.png-1.png
       return { imageNumber: 17 - toothNumber, mirrored: true };
     }
   } else {
-    // Lower teeth 17-32
     if (toothNumber >= 25 && toothNumber <= 32) {
-      // Right side: use specific mapping
       return { imageNumber: LOWER_RIGHT_MAPPING[toothNumber], mirrored: false };
     } else {
-      // Left side: 17-24 use mirrored images
       return { imageNumber: LOWER_LEFT_MAPPING[toothNumber], mirrored: true };
     }
   }
 }
 
 export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const hasIssue = record && (record.description || record.files.length > 0);
   
   const { imageNumber, mirrored } = getToothImage(number, isUpper);
   const imagePath = `/teeth/${imageNumber}.png`;
 
+  // Canvas dimensions
+  const canvasWidth = 32;
+  const canvasHeight = 56;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = () => {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      
+      // Save context state
+      ctx.save();
+      
+      // Apply mirroring if needed
+      if (mirrored) {
+        ctx.translate(canvasWidth, 0);
+        ctx.scale(-1, 1);
+      }
+      
+      // Draw the tooth image
+      ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+      
+      // Restore context
+      ctx.restore();
+      
+      // Apply red overlay only on non-transparent pixels if there's an issue
+      if (hasIssue) {
+        const imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+        const data = imageData.data;
+        
+        for (let i = 0; i < data.length; i += 4) {
+          const alpha = data[i + 3];
+          if (alpha > 0) {
+            // Blend with red (destructive color: ~239, 68, 68)
+            data[i] = Math.min(255, data[i] * 0.8 + 239 * 0.2);     // R
+            data[i + 1] = Math.min(255, data[i + 1] * 0.8 + 68 * 0.2); // G
+            data[i + 2] = Math.min(255, data[i + 2] * 0.8 + 68 * 0.2); // B
+          }
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+      }
+      
+      setIsLoaded(true);
+    };
+
+    img.onerror = () => {
+      console.error(`Failed to load tooth image: ${imagePath}`);
+    };
+
+    img.src = imagePath;
+  }, [imagePath, mirrored, hasIssue]);
+
+  // Handle click only on non-transparent pixels
+  const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = Math.floor((e.clientX - rect.left) * scaleX);
+    const y = Math.floor((e.clientY - rect.top) * scaleY);
+
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    
+    // Only trigger click if pixel is not transparent
+    if (pixel[3] > 10) {
+      onClick();
+    }
+  };
+
   return (
-    <button
-      onClick={onClick}
-      className={cn(
-        'flex flex-col items-center p-0 transition-all duration-200',
-        'hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50'
-      )}
-    >
+    <div className="flex flex-col items-center">
       {/* Tooth number */}
       <span className={cn(
         'text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none',
@@ -79,25 +152,19 @@ export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothPro
         {number}
       </span>
       
-      {/* Tooth image with red overlay for issues */}
-      <div className={cn(
-        'relative flex items-center justify-center',
-        mirrored && 'scale-x-[-1]'
-      )}>
-        <img 
-          src={imagePath}
-          alt={`Зуб ${number}`}
-          className="w-5 h-9 md:w-8 md:h-14 object-contain"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
-          }}
-        />
-        {/* Red overlay for teeth with issues */}
-        {hasIssue && (
-          <div className="absolute inset-0 bg-destructive/20 rounded-sm pointer-events-none" />
+      {/* Tooth canvas */}
+      <canvas
+        ref={canvasRef}
+        width={canvasWidth}
+        height={canvasHeight}
+        onClick={handleClick}
+        className={cn(
+          'w-5 h-9 md:w-8 md:h-14 cursor-pointer transition-transform duration-200',
+          'hover:scale-105',
+          !isLoaded && 'opacity-0'
         )}
-      </div>
-    </button>
+        style={{ imageRendering: 'auto' }}
+      />
+    </div>
   );
 }
