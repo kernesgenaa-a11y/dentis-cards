@@ -8,6 +8,7 @@ interface ToothProps {
   record?: ToothRecord;
   isSelected: boolean;
   onClick: () => void;
+  alignBottom?: boolean;
 }
 
 // Specific mapping for lower teeth (right side: 25-32)
@@ -51,7 +52,7 @@ function getToothImage(toothNumber: number, isUpper: boolean): { imageNumber: nu
   }
 }
 
-export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothProps) {
+export function Tooth({ number, isUpper, record, isSelected, onClick, alignBottom = false }: ToothProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const hasIssue = record && (record.description || record.files.length > 0);
@@ -143,14 +144,16 @@ export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothPro
   };
 
   return (
-    <div className="flex flex-col items-center">
-      {/* Tooth number */}
-      <span className={cn(
-        'text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none',
-        isUpper ? 'order-first mb-0.5' : 'order-last mt-0.5'
-      )}>
-        {number}
-      </span>
+    <div className={cn(
+      "flex flex-col",
+      alignBottom ? "justify-end" : "justify-start"
+    )}>
+      {/* Tooth number - above for upper, below for lower */}
+      {isUpper && (
+        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center mb-0.5">
+          {number}
+        </span>
+      )}
       
       {/* Tooth canvas */}
       <canvas
@@ -165,6 +168,13 @@ export function Tooth({ number, isUpper, record, isSelected, onClick }: ToothPro
         )}
         style={{ imageRendering: 'auto' }}
       />
+      
+      {/* Tooth number - below for lower */}
+      {!isUpper && (
+        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center mt-0.5">
+          {number}
+        </span>
+      )}
     </div>
   );
 }

@@ -75,10 +75,10 @@ export function DentalChart() {
       
       <CardContent className="p-2 md:p-6 overflow-auto">
         <div className="min-w-[280px] md:min-w-[520px]">
-          {/* Upper teeth */}
+          {/* Upper teeth - aligned to bottom */}
           <div className="mb-2">
             <div className="text-[10px] md:text-xs font-medium text-muted-foreground mb-1 text-center">Верхня щелепа</div>
-            <div className="flex justify-center">
+            <div className="flex justify-center items-end gap-[2px]">
               {UPPER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -87,6 +87,7 @@ export function DentalChart() {
                   record={getToothRecord(num)}
                   isSelected={selectedTooth === num}
                   onClick={() => handleToothClick(num)}
+                  alignBottom={true}
                 />
               ))}
             </div>
@@ -99,9 +100,9 @@ export function DentalChart() {
             <div className="flex-1 h-px bg-border" />
           </div>
           
-          {/* Lower teeth - reversed order for mirroring from center */}
+          {/* Lower teeth - aligned to top */}
           <div>
-            <div className="flex justify-center">
+            <div className="flex justify-center items-start gap-[2px]">
               {LOWER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -110,6 +111,7 @@ export function DentalChart() {
                   record={getToothRecord(num)}
                   isSelected={selectedTooth === num}
                   onClick={() => handleToothClick(num)}
+                  alignBottom={false}
                 />
               ))}
             </div>
