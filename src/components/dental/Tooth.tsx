@@ -145,33 +145,37 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
 
   return (
     <div className={cn(
-      "flex flex-col",
+      "flex flex-col items-center",
       alignBottom ? "justify-end" : "justify-start"
     )}>
       {/* Tooth number - above for upper, below for lower */}
       {isUpper && (
-        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center mb-0.5">
+        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center">
           {number}
         </span>
       )}
       
-      {/* Tooth canvas */}
+      {/* Tooth canvas - tight width matching actual tooth */}
       <canvas
         ref={canvasRef}
         width={canvasWidth}
         height={canvasHeight}
         onClick={handleClick}
         className={cn(
-          'w-5 h-9 md:w-8 md:h-14 cursor-pointer transition-transform duration-200',
+          'cursor-pointer transition-transform duration-200',
           'hover:scale-105',
           !isLoaded && 'opacity-0'
         )}
-        style={{ imageRendering: 'auto' }}
+        style={{ 
+          imageRendering: 'auto',
+          width: '20px',
+          height: '35px'
+        }}
       />
       
       {/* Tooth number - below for lower */}
       {!isUpper && (
-        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center mt-0.5">
+        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center">
           {number}
         </span>
       )}
