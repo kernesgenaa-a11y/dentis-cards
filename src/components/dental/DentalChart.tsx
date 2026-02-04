@@ -74,11 +74,11 @@ export function DentalChart() {
       </CardHeader>
       
       <CardContent className="p-2 md:p-6 overflow-auto">
-        <div className="min-w-[320px] md:min-w-[700px]">
+        <div className="min-w-[280px] md:min-w-[520px]">
           {/* Upper teeth */}
           <div className="mb-2">
-            <div className="text-[10px] md:text-xs font-medium text-muted-foreground mb-2 text-center">Верхня щелепа</div>
-            <div className="flex justify-center gap-0.5 md:gap-1 flex-wrap md:flex-nowrap">
+            <div className="text-[10px] md:text-xs font-medium text-muted-foreground mb-1 text-center">Верхня щелепа</div>
+            <div className="flex justify-center">
               {UPPER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -93,15 +93,15 @@ export function DentalChart() {
           </div>
           
           {/* Divider */}
-          <div className="flex items-center justify-center my-2 md:my-4">
+          <div className="flex items-center justify-center my-2 md:my-3">
             <div className="flex-1 h-px bg-border" />
             <div className="px-2 md:px-4 text-[10px] md:text-xs text-muted-foreground font-medium">ЗУБНА КАРТА</div>
             <div className="flex-1 h-px bg-border" />
           </div>
           
-          {/* Lower teeth */}
+          {/* Lower teeth - reversed order for mirroring from center */}
           <div>
-            <div className="flex justify-center gap-0.5 md:gap-1 flex-wrap md:flex-nowrap">
+            <div className="flex justify-center">
               {LOWER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -113,14 +113,14 @@ export function DentalChart() {
                 />
               ))}
             </div>
-            <div className="text-[10px] md:text-xs font-medium text-muted-foreground mt-2 text-center">Нижня щелепа</div>
+            <div className="text-[10px] md:text-xs font-medium text-muted-foreground mt-1 text-center">Нижня щелепа</div>
           </div>
         </div>
         
         {/* Legend */}
-        <div className="mt-4 md:mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs">
+        <div className="mt-4 md:mt-6 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs">
           <div className="flex items-center gap-1 md:gap-2">
-            <div className="w-4 h-4 rounded ring-2 ring-destructive ring-offset-1 ring-offset-background" />
+            <div className="w-4 h-4 rounded bg-destructive/20" />
             <span className="text-muted-foreground">Зуб із записом</span>
           </div>
         </div>
