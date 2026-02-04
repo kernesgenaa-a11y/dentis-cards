@@ -22,6 +22,18 @@ const LOWER_RIGHT_MAPPING: Record<number, number> = {
   25: 18,
 };
 
+// Mapping for left side (17-24) - mirrors right side
+const LOWER_LEFT_MAPPING: Record<number, number> = {
+  17: 24, // mirrors 32
+  18: 23, // mirrors 31
+  19: 22, // mirrors 30
+  20: 22, // mirrors 29
+  21: 21, // mirrors 28
+  22: 20, // mirrors 27
+  23: 19, // mirrors 26
+  24: 18, // mirrors 25
+};
+
 // Get the image number and whether it should be mirrored
 function getToothImage(toothNumber: number, isUpper: boolean): { imageNumber: number; mirrored: boolean } {
   if (isUpper) {
@@ -38,14 +50,9 @@ function getToothImage(toothNumber: number, isUpper: boolean): { imageNumber: nu
     if (toothNumber >= 25 && toothNumber <= 32) {
       // Right side: use specific mapping
       return { imageNumber: LOWER_RIGHT_MAPPING[toothNumber], mirrored: false };
-    } else if (toothNumber === 24) {
-      // Center tooth 24 uses 14.png
-      return { imageNumber: 14, mirrored: false };
     } else {
-      // Left side: 17-23 mirror from right side (25-31)
-      // 17 mirrors 32, 18 mirrors 31, etc.
-      const mirrorTooth = 49 - toothNumber; // 17->32, 18->31, etc.
-      return { imageNumber: LOWER_RIGHT_MAPPING[mirrorTooth], mirrored: true };
+      // Left side: 17-24 use mirrored images
+      return { imageNumber: LOWER_LEFT_MAPPING[toothNumber], mirrored: true };
     }
   }
 }
