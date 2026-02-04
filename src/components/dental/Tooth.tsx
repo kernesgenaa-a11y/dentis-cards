@@ -10,6 +10,18 @@ interface ToothProps {
   onClick: () => void;
 }
 
+// Specific mapping for lower teeth (right side: 25-32)
+const LOWER_RIGHT_MAPPING: Record<number, number> = {
+  32: 24,
+  31: 23,
+  30: 22,
+  29: 22,
+  28: 21,
+  27: 20,
+  26: 19,
+  25: 18,
+};
+
 // Get the image number and whether it should be mirrored
 function getToothImage(toothNumber: number, isUpper: boolean): { imageNumber: number; mirrored: boolean } {
   if (isUpper) {
@@ -22,13 +34,18 @@ function getToothImage(toothNumber: number, isUpper: boolean): { imageNumber: nu
       return { imageNumber: 17 - toothNumber, mirrored: true };
     }
   } else {
-    // Lower teeth 17-32 - mirrored from center
-    if (toothNumber >= 17 && toothNumber <= 24) {
-      // Right side: 17-24 use 17.png-24.png
-      return { imageNumber: toothNumber, mirrored: false };
+    // Lower teeth 17-32
+    if (toothNumber >= 25 && toothNumber <= 32) {
+      // Right side: use specific mapping
+      return { imageNumber: LOWER_RIGHT_MAPPING[toothNumber], mirrored: false };
+    } else if (toothNumber === 24) {
+      // Center tooth 24 uses 14.png
+      return { imageNumber: 14, mirrored: false };
     } else {
-      // Left side: 25-32 use mirrored 24.png-17.png
-      return { imageNumber: 49 - toothNumber, mirrored: true };
+      // Left side: 17-23 mirror from right side (25-31)
+      // 17 mirrors 32, 18 mirrors 31, etc.
+      const mirrorTooth = 49 - toothNumber; // 17->32, 18->31, etc.
+      return { imageNumber: LOWER_RIGHT_MAPPING[mirrorTooth], mirrored: true };
     }
   }
 }
