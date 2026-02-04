@@ -58,18 +58,32 @@ export function VisitHistory({ patientId }: VisitHistoryProps) {
 
   return (
     <div className="border-t mt-4 pt-4">
-      <div 
-        className="flex items-center justify-between cursor-pointer mb-3"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <div className="flex items-center gap-2">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 justify-start">
           <CalendarIcon className="w-4 h-4 text-primary" />
           <h3 className="text-sm font-medium">Історія візитів</h3>
           <Badge variant="secondary" className="text-xs">
             {patient.visits.length}
           </Badge>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center justify-center">
+          <Button
+            variant="outline"
+            size="sm"
+            aria-expanded={isExpanded}
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="h-9 w-9 p-0 flex items-center justify-center border rounded-md"
+          >
+            {isExpanded ? (
+              <ChevronUp className="w-5 h-5" />
+            ) : (
+              <ChevronDown className="w-5 h-5" />
+            )}
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-2 justify-end">
           {canPerformAction('edit', 'patient') && (
             <Button
               variant="ghost"
@@ -83,11 +97,6 @@ export function VisitHistory({ patientId }: VisitHistoryProps) {
               <Plus className="w-3 h-3 mr-1" />
               Додати візит
             </Button>
-          )}
-          {isExpanded ? (
-            <ChevronUp className="w-4 h-4 text-muted-foreground" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           )}
         </div>
       </div>

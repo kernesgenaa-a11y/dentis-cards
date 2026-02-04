@@ -49,7 +49,7 @@ export function DentalChart() {
   const issueCount = patient.dentalChart.filter(t => t.description || t.files.length > 0).length;
 
   return (
-    <Card className="flex-1 overflow-hidden animate-fade-in">
+    <Card className="flex-1 overflow-hidden animate-fade-in bg-muted/5">
       <CardHeader className="border-b bg-card p-3 md:p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
           <div>
@@ -74,11 +74,11 @@ export function DentalChart() {
       </CardHeader>
       
       <CardContent className="p-2 md:p-6 overflow-auto">
-        <div className="min-w-[280px] md:min-w-[520px]">
+        <div className="min-w-[280px]">
           {/* Upper teeth - aligned to bottom */}
           <div className="mb-2">
             <div className="text-[10px] md:text-xs font-medium text-muted-foreground mb-1 text-center">Верхня щелепа</div>
-            <div className="flex justify-center items-end gap-[2px]">
+            <div className="flex justify-center items-end gap-0 flex-nowrap overflow-auto py-[5px]">
               {UPPER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -93,16 +93,9 @@ export function DentalChart() {
             </div>
           </div>
           
-          {/* Divider */}
-          <div className="flex items-center justify-center my-2 md:my-3">
-            <div className="flex-1 h-px bg-border" />
-            <div className="px-2 md:px-4 text-[10px] md:text-xs text-muted-foreground font-medium">ЗУБНА КАРТА</div>
-            <div className="flex-1 h-px bg-border" />
-          </div>
-          
           {/* Lower teeth - aligned to top */}
           <div>
-            <div className="flex justify-center items-start gap-[2px]">
+            <div className="flex justify-center items-start gap-0 flex-nowrap overflow-auto py-[5px]">
               {LOWER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -119,14 +112,6 @@ export function DentalChart() {
           </div>
         </div>
         
-        {/* Legend */}
-        <div className="mt-4 md:mt-6 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs">
-          <div className="flex items-center gap-1 md:gap-2">
-            <div className="w-4 h-4 rounded bg-destructive/20" />
-            <span className="text-muted-foreground">Зуб із записом</span>
-          </div>
-        </div>
-
         {/* Visit History */}
         <VisitHistory patientId={patient.id} />
       </CardContent>

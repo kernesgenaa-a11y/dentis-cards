@@ -61,8 +61,9 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
   const imagePath = `/teeth/${imageNumber}.png`;
 
   // Canvas dimensions
-  const canvasWidth = 32;
-  const canvasHeight = 56;
+  // Canvas dimensions (scaled 1.5x for larger teeth)
+  const canvasWidth = 48; // 32 * 1.5
+  const canvasHeight = 84; // 56 * 1.5
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -77,21 +78,56 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
     img.onload = () => {
       // Clear canvas
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-      
-      // Save context state
-      ctx.save();
-      
-      // Apply mirroring if needed
-      if (mirrored) {
-        ctx.translate(canvasWidth, 0);
-        ctx.scale(-1, 1);
+
+      // Create an offscreen canvas to detect non-transparent bounds (crop transparent padding)
+      const tmp = document.createElement('canvas');
+      tmp.width = img.width;
+      tmp.height = img.height;
+      const tctx = tmp.getContext('2d');
+      if (tctx) {
+        tctx.drawImage(img, 0, 0);
+        const imgData = tctx.getImageData(0, 0, tmp.width, tmp.height).data;
+        let minX = tmp.width, minY = tmp.height, maxX = 0, maxY = 0;
+        for (let y = 0; y < tmp.height; y++) {
+          for (let x = 0; x < tmp.width; x++) {
+            const idx = (y * tmp.width + x) * 4;
+            if (imgData[idx + 3] > 0) {
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+              if (y > maxY) maxY = y;
+            }
+          }
+        }
+
+        // If no non-transparent pixel found, fall back to full image
+        if (maxX < minX || maxY < minY) {
+          minX = 0;
+          minY = 0;
+          maxX = tmp.width - 1;
+          maxY = tmp.height - 1;
+        }
+
+        const sx = minX;
+        const sy = minY;
+        const sw = maxX - minX + 1;
+        const sh = maxY - minY + 1;
+
+        // Save context state
+        ctx.save();
+
+        // Apply mirroring if needed
+        if (mirrored) {
+          ctx.translate(canvasWidth, 0);
+          ctx.scale(-1, 1);
+        }
+
+        // Draw the cropped tooth image scaled to canvas size
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvasWidth, canvasHeight);
+
+        // Restore context
+        ctx.restore();
       }
-      
-      // Draw the tooth image
-      ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-      
-      // Restore context
-      ctx.restore();
       
       // Apply red overlay only on non-transparent pixels if there's an issue
       if (hasIssue) {
@@ -146,10 +182,9 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
   return (
     <div 
       className={cn(
-        "flex flex-col items-center",
+        "flex flex-col items-center flex-none w-[18px] md:w-[24px]",
         alignBottom ? "justify-end" : "justify-start"
       )}
-      style={{ width: '20px' }}
     >
       {/* Tooth number - above for upper */}
       {isUpper && (
@@ -165,15 +200,12 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
         height={canvasHeight}
         onClick={handleClick}
         className={cn(
-          'cursor-pointer transition-transform duration-200 block',
+          'cursor-pointer transition-transform duration-200 block flex-none',
           'hover:scale-105',
+          'w-[18px] md:w-[24px] h-[56px] md:h-[72px]',
           !isLoaded && 'opacity-0'
         )}
-        style={{ 
-          imageRendering: 'auto',
-          width: '20px',
-          height: '35px'
-        }}
+        style={{ imageRendering: 'auto' }}
       />
       
       {/* Tooth number - below for lower */}

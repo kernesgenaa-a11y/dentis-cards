@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 
-type Theme = 'light' | 'dark';
+type Theme = 'light';
 
 interface ThemeContextType {
   theme: Theme;
@@ -11,25 +11,15 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = localStorage.getItem('dental_theme');
-    if (stored === 'dark' || stored === 'light') return stored;
-    return 'light';
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('dental_theme', theme);
-  }, [theme]);
+  // Always use light theme
+  const theme: Theme = 'light';
 
   const toggleTheme = () => {
-    setThemeState(prev => prev === 'light' ? 'dark' : 'light');
+    // No-op, always light theme
   };
 
   const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
+    // No-op, always light theme
   };
 
   return (

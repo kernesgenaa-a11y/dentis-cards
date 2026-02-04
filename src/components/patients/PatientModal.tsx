@@ -117,11 +117,11 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
             />
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button type="button" variant="outline" onClick={onClose} className="h-10 border-2 md:w-auto w-full order-2 sm:order-1">
               Скасувати
             </Button>
-            <Button type="submit">
+            <Button type="submit" className="h-10 border-2 md:w-auto w-full order-1 sm:order-2">
               {isEditing ? 'Зберегти зміни' : 'Додати пацієнта'}
             </Button>
           </DialogFooter>

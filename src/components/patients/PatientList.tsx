@@ -80,12 +80,12 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
   const selectedPatient = patients.find(p => p.id === selectedPatientId);
 
   return (
-    <Card className="w-full md:w-80 flex flex-col h-full animate-slide-in border-0 md:border shadow-none md:shadow-sm">
+    <Card className="w-full md:w-80 flex flex-col h-full animate-slide-in border-0 md:border shadow-none md:shadow-sm bg-muted/10">
       <CardHeader className="border-b shrink-0">
-        <div className="flex items-center justify-between mb-3">
-          <CardTitle className="font-heading text-lg">Пацієнти</CardTitle>
+        <div className="flex flex-col-reverse md:flex-row items-stretch md:items-center justify-between gap-2 md:gap-0 mb-3">
+          <CardTitle className="font-heading text-lg order-2 md:order-1">Пацієнти</CardTitle>
           {canPerformAction('add', 'patient') && (
-            <Button size="sm" onClick={() => setIsAddingPatient(true)}>
+            <Button size="sm" onClick={() => setIsAddingPatient(true)} className="order-1 md:order-2">
               <Plus className="w-4 h-4 mr-1" />
               Додати
             </Button>

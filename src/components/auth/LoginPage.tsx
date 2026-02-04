@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Stethoscope, AlertCircle, Eye, EyeOff, Moon, Sun } from 'lucide-react';
+import { Stethoscope, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 export function LoginPage() {
   const { login } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -35,20 +33,6 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
-      {/* Theme Toggle */}
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={toggleTheme}
-        className="absolute top-4 right-4"
-      >
-        {theme === 'light' ? (
-          <Moon className="w-5 h-5" />
-        ) : (
-          <Sun className="w-5 h-5" />
-        )}
-      </Button>
-
       <div className="w-full max-w-md animate-fade-in">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -59,7 +43,7 @@ export function LoginPage() {
           <p className="text-muted-foreground mt-1">Стоматологічна клініка</p>
         </div>
 
-        <Card className="shadow-medium border-0">
+        <Card className="shadow-medium border-0 bg-muted/3">
           <CardHeader className="text-center pb-2">
             <CardTitle className="font-heading text-xl">Ласкаво просимо</CardTitle>
             <CardDescription>Увійдіть для доступу до системи</CardDescription>

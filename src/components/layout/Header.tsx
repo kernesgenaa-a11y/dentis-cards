@@ -1,13 +1,12 @@
 import React from 'react';
 import { useClinic } from '@/context/ClinicContext';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Stethoscope, LogOut, User, Shield, Moon, Sun } from 'lucide-react';
+import { Stethoscope, LogOut, User, Shield } from 'lucide-react';
 export function Header() {
   const {
     clinicName,
@@ -19,10 +18,6 @@ export function Header() {
     currentUser,
     logout
   } = useAuth();
-  const {
-    theme,
-    toggleTheme
-  } = useTheme();
   const getRoleBadge = (role: string) => {
     const variants: Record<string, {
       label: string;
@@ -82,11 +77,6 @@ export function Header() {
               </SelectContent>
             </Select>
           </div>
-
-          {/* Theme Toggle */}
-          <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-white/10 h-8 w-8 md:h-10 md:w-10">
-            {theme === 'light' ? <Moon className="w-4 h-4 md:w-5 md:h-5" /> : <Sun className="w-4 h-4 md:w-5 md:h-5" />}
-          </Button>
 
           {/* User Menu */}
           {currentUser && <DropdownMenu>
