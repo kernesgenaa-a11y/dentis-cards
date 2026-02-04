@@ -144,25 +144,28 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
   };
 
   return (
-    <div className={cn(
-      "flex flex-col items-center",
-      alignBottom ? "justify-end" : "justify-start"
-    )}>
-      {/* Tooth number - above for upper, below for lower */}
+    <div 
+      className={cn(
+        "flex flex-col items-center",
+        alignBottom ? "justify-end" : "justify-start"
+      )}
+      style={{ width: '20px' }}
+    >
+      {/* Tooth number - above for upper */}
       {isUpper && (
-        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center">
+        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center w-full">
           {number}
         </span>
       )}
       
-      {/* Tooth canvas - tight width matching actual tooth */}
+      {/* Tooth canvas */}
       <canvas
         ref={canvasRef}
         width={canvasWidth}
         height={canvasHeight}
         onClick={handleClick}
         className={cn(
-          'cursor-pointer transition-transform duration-200',
+          'cursor-pointer transition-transform duration-200 block',
           'hover:scale-105',
           !isLoaded && 'opacity-0'
         )}
@@ -175,7 +178,7 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
       
       {/* Tooth number - below for lower */}
       {!isUpper && (
-        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center">
+        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center w-full">
           {number}
         </span>
       )}
