@@ -4,6 +4,9 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
+// Repository name used for GitHub Pages base path
+const repoBase = '/dental-health-hub/';
+
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
@@ -12,6 +15,8 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
+  // Ensure correct asset paths when deployed to GitHub Pages
+  base: process.env.GH_PAGES ? repoBase : '/',
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
