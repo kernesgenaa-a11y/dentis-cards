@@ -44,11 +44,14 @@ export interface ChangeHistoryEntry {
   details: string;
 }
 
+export type Gender = 'male' | 'female';
+
 export interface Patient {
   id: string;
   firstName: string;
   lastName: string;
   middleName?: string;
+  gender?: Gender;
   phone: string;
   dateOfBirth: string;
   doctorId: string;

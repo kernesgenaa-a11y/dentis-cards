@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, Plus, User, Phone, MoreVertical, Trash2, Edit2, History } from 'lucide-react';
+import { Search, Plus, User, Phone, MoreVertical, Trash2, Edit2, History, Filter } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PatientModal, formatPhoneForDisplay } from './PatientModal';
 import { PatientHistoryModal } from './PatientHistoryModal';
 import { cn } from '@/lib/utils';
@@ -43,6 +44,8 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
   const { canPerformAction } = useAuth();
   
   const [searchQuery, setSearchQuery] = useState('');
+  const [genderFilter, setGenderFilter] = useState<string>('all');
+  const [newOldFilter, setNewOldFilter] = useState<string>('all');
   const [isAddingPatient, setIsAddingPatient] = useState(false);
   const [editingPatient, setEditingPatient] = useState<string | null>(null);
   const [deletingPatient, setDeletingPatient] = useState<string | null>(null);
@@ -50,23 +53,30 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
   const { currentUser } = useAuth();
 
   const filteredPatients = useMemo(() => {
-    // If "all" is selected, show all patients
     const doctorPatients = selectedDoctorId === 'all' 
       ? patients 
       : selectedDoctorId 
         ? getPatientsByDoctor(selectedDoctorId) 
         : [];
     
-    if (!searchQuery.trim()) return doctorPatients;
-    
-    const query = searchQuery.toLowerCase();
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
     return doctorPatients.filter(p => {
-      const fullName = `${p.firstName} ${p.lastName} ${p.middleName || ''}`.toLowerCase();
-      const matchesName = fullName.includes(query);
-      const matchesDate = p.visits.some(v => v.date.includes(searchQuery));
-      return matchesName || matchesDate;
+      // Search filter
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const fullName = `${p.firstName} ${p.lastName} ${p.middleName || ''}`.toLowerCase();
+        if (!fullName.includes(query) && !p.visits.some(v => v.date.includes(searchQuery))) return false;
+      }
+      // Gender filter
+      if (genderFilter !== 'all' && p.gender !== genderFilter) return false;
+      // New/Old filter
+      if (newOldFilter === 'new' && new Date(p.createdAt) < twoWeeksAgo) return false;
+      if (newOldFilter === 'old' && new Date(p.createdAt) >= twoWeeksAgo) return false;
+      return true;
     });
-  }, [selectedDoctorId, patients, searchQuery, getPatientsByDoctor]);
+  }, [selectedDoctorId, patients, searchQuery, genderFilter, newOldFilter, getPatientsByDoctor]);
 
   const handlePatientClick = (patientId: string) => {
     setSelectedPatientId(patientId);
@@ -102,6 +112,28 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
           />
+        </div>
+        <div className="flex gap-2 mt-2">
+          <Select value={genderFilter} onValueChange={setGenderFilter}>
+            <SelectTrigger className="h-8 text-xs flex-1">
+              <SelectValue placeholder="Стать" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Усі</SelectItem>
+              <SelectItem value="male">Ч</SelectItem>
+              <SelectItem value="female">Ж</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={newOldFilter} onValueChange={setNewOldFilter}>
+            <SelectTrigger className="h-8 text-xs flex-1">
+              <SelectValue placeholder="Новий/Старий" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Усі</SelectItem>
+              <SelectItem value="new">Новий</SelectItem>
+              <SelectItem value="old">Старий</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </CardHeader>
       
