@@ -182,31 +182,35 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
   return (
     <div 
       className={cn(
-        "flex flex-col items-center flex-1 min-w-0",
+        "flex flex-col items-center flex-none w-[18px] md:w-[24px]",
         alignBottom ? "justify-end" : "justify-start"
       )}
     >
+      {/* Tooth number - above for upper */}
       {isUpper && (
-        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center w-full truncate">
+        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center w-full">
           {number}
         </span>
       )}
       
+      {/* Tooth canvas */}
       <canvas
         ref={canvasRef}
         width={canvasWidth}
         height={canvasHeight}
         onClick={handleClick}
         className={cn(
-          'cursor-pointer transition-transform duration-200 block w-full',
+          'cursor-pointer transition-transform duration-200 block flex-none',
           'hover:scale-105',
+          'w-[18px] md:w-[24px] h-[56px] md:h-[72px]',
           !isLoaded && 'opacity-0'
         )}
-        style={{ imageRendering: 'auto', aspectRatio: `${canvasWidth}/${canvasHeight}` }}
+        style={{ imageRendering: 'auto' }}
       />
       
+      {/* Tooth number - below for lower */}
       {!isUpper && (
-        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center w-full truncate">
+        <span className="text-[8px] md:text-[10px] font-medium text-muted-foreground leading-none text-center w-full">
           {number}
         </span>
       )}

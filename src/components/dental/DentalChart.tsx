@@ -84,11 +84,11 @@ export function DentalChart() {
       </CardHeader>
       
       <CardContent className="p-2 md:p-6 overflow-auto">
-        <div>
+        <div className="min-w-[280px]">
           {/* Upper teeth - aligned to bottom */}
           <div className="mb-2">
             <div className="text-[10px] md:text-xs font-medium text-muted-foreground mb-1 text-center">Верхня щелепа</div>
-            <div className="flex items-end gap-0 py-[5px]">
+            <div className="flex justify-center items-end gap-0 flex-nowrap overflow-auto py-[5px]">
               {UPPER_TEETH.map((num) => (
                 <Tooth
                   key={num}
@@ -105,7 +105,7 @@ export function DentalChart() {
           
           {/* Lower teeth - aligned to top */}
           <div>
-            <div className="flex items-start gap-0 py-[5px]">
+            <div className="flex justify-center items-start gap-0 flex-nowrap overflow-auto py-[5px]">
               {LOWER_TEETH.map((num) => (
                 <Tooth
                   key={num}
