@@ -3,7 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useClinic } from '@/context/ClinicContext';
+import { useAuth } from '@/context/AuthContext';
 
 interface PatientModalProps {
   isOpen: boolean;
@@ -11,13 +13,38 @@ interface PatientModalProps {
   patientId?: string | null;
 }
 
+function formatPhoneForSave(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('380') && digits.length === 12) {
+    return '+' + digits;
+  }
+  if (digits.startsWith('0') && digits.length === 10) {
+    return '+38' + digits;
+  }
+  if (digits.length === 9) {
+    return '+380' + digits;
+  }
+  return phone;
+}
+
+export function formatPhoneForDisplay(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length === 12 && digits.startsWith('380')) {
+    return `+38 (0${digits.slice(3, 5)})-${digits.slice(5, 8)}-${digits.slice(8, 10)}-${digits.slice(10, 12)}`;
+  }
+  return phone;
+}
+
 export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) {
-  const { patients, selectedDoctorId, addPatient, updatePatient } = useClinic();
+  const { patients, selectedDoctorId, doctors, addPatient, updatePatient, addHistoryEntry } = useClinic();
+  const { currentUser } = useAuth();
   
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [middleName, setMiddleName] = useState('');
   const [phone, setPhone] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
+  const [doctorId, setDoctorId] = useState('');
 
   const isEditing = !!patientId;
   const existingPatient = patientId ? patients.find(p => p.id === patientId) : null;
@@ -26,35 +53,64 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
     if (existingPatient) {
       setFirstName(existingPatient.firstName);
       setLastName(existingPatient.lastName);
+      setMiddleName(existingPatient.middleName || '');
       setPhone(existingPatient.phone);
       setDateOfBirth(existingPatient.dateOfBirth);
+      setDoctorId(existingPatient.doctorId);
     } else {
       setFirstName('');
       setLastName('');
+      setMiddleName('');
       setPhone('');
       setDateOfBirth('');
+      setDoctorId(selectedDoctorId === 'all' ? '' : selectedDoctorId || '');
     }
-  }, [existingPatient, isOpen]);
+  }, [existingPatient, isOpen, selectedDoctorId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!selectedDoctorId) return;
+    if (!doctorId) return;
+
+    const formattedPhone = formatPhoneForSave(phone);
 
     if (isEditing && patientId) {
+      const changes: string[] = [];
+      if (existingPatient) {
+        if (existingPatient.firstName !== firstName) changes.push(`Ім'я: ${existingPatient.firstName} → ${firstName}`);
+        if (existingPatient.lastName !== lastName) changes.push(`Прізвище: ${existingPatient.lastName} → ${lastName}`);
+        if ((existingPatient.middleName || '') !== middleName) changes.push(`По-батькові: ${existingPatient.middleName || '—'} → ${middleName || '—'}`);
+        if (existingPatient.phone !== formattedPhone) changes.push(`Телефон: ${existingPatient.phone} → ${formattedPhone}`);
+        if (existingPatient.dateOfBirth !== dateOfBirth) changes.push(`Дата народження змінена`);
+        if (existingPatient.doctorId !== doctorId) changes.push(`Лікар змінений`);
+      }
+
       updatePatient(patientId, {
         firstName,
         lastName,
-        phone,
+        middleName,
+        phone: formattedPhone,
         dateOfBirth,
+        doctorId,
       });
+
+      if (changes.length > 0) {
+        addHistoryEntry(patientId, {
+          userId: currentUser?.id || '',
+          userName: currentUser?.name || 'Невідомий',
+          action: 'edit',
+          target: 'patient',
+          details: changes.join('; '),
+        });
+      }
     } else {
       addPatient({
         firstName,
         lastName,
-        phone,
+        middleName,
+        phone: formattedPhone,
         dateOfBirth,
-        doctorId: selectedDoctorId,
+        doctorId,
       });
     }
     
@@ -73,16 +129,6 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">Ім'я</Label>
-              <Input
-                id="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="Іван"
-                required
-              />
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="lastName">Прізвище</Label>
               <Input
                 id="lastName"
@@ -92,6 +138,26 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
                 required
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="firstName">Ім'я</Label>
+              <Input
+                id="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Іван"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="middleName">По-батькові</Label>
+            <Input
+              id="middleName"
+              value={middleName}
+              onChange={(e) => setMiddleName(e.target.value)}
+              placeholder="Олексійович"
+            />
           </div>
 
           <div className="space-y-2">
@@ -101,7 +167,7 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+380 (50) 123-4567"
+              placeholder="+380 або 0XX..."
               required
             />
           </div>
@@ -113,15 +179,30 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
               type="date"
               value={dateOfBirth}
               onChange={(e) => setDateOfBirth(e.target.value)}
-              required
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Лікар</Label>
+            <Select value={doctorId} onValueChange={setDoctorId} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Оберіть лікаря..." />
+              </SelectTrigger>
+              <SelectContent>
+                {doctors.map(doc => (
+                  <SelectItem key={doc.id} value={doc.id}>
+                    {doc.name} — {doc.specialty}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button type="button" variant="outline" onClick={onClose} className="h-10 border-2 md:w-auto w-full order-2 sm:order-1">
               Скасувати
             </Button>
-            <Button type="submit" className="h-10 border-2 md:w-auto w-full order-1 sm:order-2">
+            <Button type="submit" className="h-10 border-2 md:w-auto w-full order-1 sm:order-2" disabled={!doctorId}>
               {isEditing ? 'Зберегти зміни' : 'Додати пацієнта'}
             </Button>
           </DialogFooter>

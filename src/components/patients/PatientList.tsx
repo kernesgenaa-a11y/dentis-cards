@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, Plus, User, Phone, MoreVertical, Trash2, Edit2 } from 'lucide-react';
-import { PatientModal } from './PatientModal';
+import { Search, Plus, User, Phone, MoreVertical, Trash2, Edit2, History } from 'lucide-react';
+import { PatientModal, formatPhoneForDisplay } from './PatientModal';
+import { PatientHistoryModal } from './PatientHistoryModal';
 import { cn } from '@/lib/utils';
 import {
   AlertDialog,
@@ -45,6 +46,8 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
   const [isAddingPatient, setIsAddingPatient] = useState(false);
   const [editingPatient, setEditingPatient] = useState<string | null>(null);
   const [deletingPatient, setDeletingPatient] = useState<string | null>(null);
+  const [historyPatient, setHistoryPatient] = useState<string | null>(null);
+  const { currentUser } = useAuth();
 
   const filteredPatients = useMemo(() => {
     // If "all" is selected, show all patients
@@ -58,7 +61,7 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
     
     const query = searchQuery.toLowerCase();
     return doctorPatients.filter(p => {
-      const fullName = `${p.firstName} ${p.lastName}`.toLowerCase();
+      const fullName = `${p.firstName} ${p.lastName} ${p.middleName || ''}`.toLowerCase();
       const matchesName = fullName.includes(query);
       const matchesDate = p.visits.some(v => v.date.includes(searchQuery));
       return matchesName || matchesDate;
@@ -129,12 +132,12 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
                       <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                           <h4 className="font-medium truncate">
-                            {patient.firstName} {patient.lastName}
+                            {patient.lastName} {patient.firstName} {patient.middleName || ''}
                           </h4>
                           <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Phone className="w-3 h-3" />
-                              {patient.phone}
+                              {formatPhoneForDisplay(patient.phone)}
                             </span>
                           </div>
                         </div>
@@ -162,6 +165,17 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
                                 >
                                   <Edit2 className="w-4 h-4 mr-2" />
                                   Редагувати
+                                </DropdownMenuItem>
+                              )}
+                              {(currentUser?.role === 'super-admin' || currentUser?.role === 'doctor') && (
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setHistoryPatient(patient.id);
+                                  }}
+                                >
+                                  <History className="w-4 h-4 mr-2" />
+                                  Історія змін
                                 </DropdownMenuItem>
                               )}
                               {canPerformAction('delete', 'patient') && (
@@ -216,6 +230,13 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* History Modal */}
+      <PatientHistoryModal
+        isOpen={historyPatient !== null}
+        onClose={() => setHistoryPatient(null)}
+        patientId={historyPatient}
+      />
     </Card>
   );
 }
