@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Users } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const Index = () => {
   const { currentUser } = useAuth();
@@ -23,7 +24,6 @@ const Index = () => {
       <Header />
       
       <main className="flex-1 flex flex-col md:flex-row p-2 md:p-4 gap-2 md:gap-4 overflow-hidden">
-        {/* Mobile: Sheet for patient list */}
         {isMobile ? (
           <>
             <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
@@ -43,10 +43,15 @@ const Index = () => {
             <DentalChart />
           </>
         ) : (
-          <>
-            <PatientList />
-            <DentalChart />
-          </>
+          <ResizablePanelGroup direction="horizontal" className="flex-1 rounded-lg">
+            <ResizablePanel defaultSize={25} minSize={15} maxSize={50}>
+              <PatientList />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={75} minSize={40}>
+              <DentalChart />
+            </ResizablePanel>
+          </ResizablePanelGroup>
         )}
       </main>
     </div>
