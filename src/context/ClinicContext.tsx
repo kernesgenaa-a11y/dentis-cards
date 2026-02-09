@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { Patient, Doctor, ToothRecord, Visit, FileAttachment } from '@/types/dental';
+import { Patient, Doctor, ToothRecord, Visit, FileAttachment, ChangeHistoryEntry } from '@/types/dental';
 import { useLocalStorage, useBackup } from '@/hooks/useLocalStorage';
 
 interface ClinicContextType {
@@ -10,10 +10,10 @@ interface ClinicContextType {
   selectedPatientId: string | null;
   setSelectedDoctorId: (id: string | null) => void;
   setSelectedPatientId: (id: string | null) => void;
-  addPatient: (patient: Omit<Patient, 'id' | 'dentalChart' | 'visits' | 'createdAt' | 'updatedAt'>) => void;
-  updatePatient: (id: string, updates: Partial<Patient>) => void;
+  addPatient: (patient: Omit<Patient, 'id' | 'dentalChart' | 'visits' | 'createdAt' | 'updatedAt' | 'changeHistory'>) => void;
+  updatePatient: (id: string, updates: Partial<Patient>, userName?: string) => void;
   deletePatient: (id: string) => void;
-  updateToothRecord: (patientId: string, toothNumber: number, record: Partial<ToothRecord>) => void;
+  updateToothRecord: (patientId: string, toothNumber: number, record: Partial<ToothRecord>, userName?: string) => void;
   addVisit: (patientId: string, visit: Omit<Visit, 'id'>) => void;
   updateVisit: (patientId: string, visitId: string, updates: Partial<Visit>) => void;
   deleteVisit: (patientId: string, visitId: string) => void;
@@ -22,6 +22,7 @@ interface ClinicContextType {
   deleteDoctor: (id: string) => void;
   getPatientsByDoctor: (doctorId: string) => Patient[];
   searchPatients: (query: string, doctorId: string) => Patient[];
+  addHistoryEntry: (patientId: string, entry: Omit<ChangeHistoryEntry, 'id' | 'timestamp'>) => void;
 }
 
 const ClinicContext = createContext<ClinicContextType | undefined>(undefined);
@@ -36,6 +37,7 @@ const DEFAULT_PATIENTS: Patient[] = [
     id: 'patient-1',
     firstName: 'Іван',
     lastName: 'Петренко',
+    middleName: 'Олексійович',
     phone: '+380 (50) 123-4567',
     dateOfBirth: '1985-03-15',
     doctorId: 'doctor-1',
@@ -47,6 +49,7 @@ const DEFAULT_PATIENTS: Patient[] = [
       { id: 'v1', date: '2025-01-15', type: 'past', notes: 'Плановий огляд', doctorId: 'doctor-1' },
       { id: 'v2', date: '2025-02-15', type: 'future', notes: 'Контрольний візит', doctorId: 'doctor-1' },
     ],
+    changeHistory: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -54,6 +57,7 @@ const DEFAULT_PATIENTS: Patient[] = [
     id: 'patient-2',
     firstName: 'Марія',
     lastName: 'Коваленко',
+    middleName: '',
     phone: '+380 (67) 987-6543',
     dateOfBirth: '1990-07-22',
     doctorId: 'doctor-1',
@@ -61,6 +65,7 @@ const DEFAULT_PATIENTS: Patient[] = [
     visits: [
       { id: 'v3', date: '2025-01-20', type: 'past', notes: 'Професійна чистка', doctorId: 'doctor-1' },
     ],
+    changeHistory: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -76,12 +81,26 @@ export function ClinicProvider({ children }: { children: React.ReactNode }) {
 
   useBackup({ patients, doctors }, lastBackup, setLastBackup);
 
-  const addPatient = useCallback((patientData: Omit<Patient, 'id' | 'dentalChart' | 'visits' | 'createdAt' | 'updatedAt'>) => {
+  const addHistoryEntry = useCallback((patientId: string, entry: Omit<ChangeHistoryEntry, 'id' | 'timestamp'>) => {
+    const newEntry: ChangeHistoryEntry = {
+      ...entry,
+      id: `history-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      timestamp: new Date().toISOString(),
+    };
+    setPatients(prev => prev.map(p =>
+      p.id === patientId
+        ? { ...p, changeHistory: [...(p.changeHistory || []), newEntry] }
+        : p
+    ));
+  }, [setPatients]);
+
+  const addPatient = useCallback((patientData: Omit<Patient, 'id' | 'dentalChart' | 'visits' | 'createdAt' | 'updatedAt' | 'changeHistory'>) => {
     const newPatient: Patient = {
       ...patientData,
       id: `patient-${Date.now()}`,
       dentalChart: [],
       visits: [],
+      changeHistory: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -207,6 +226,7 @@ export function ClinicProvider({ children }: { children: React.ReactNode }) {
       deleteDoctor,
       getPatientsByDoctor,
       searchPatients,
+      addHistoryEntry,
     }}>
       {children}
     </ClinicContext.Provider>
