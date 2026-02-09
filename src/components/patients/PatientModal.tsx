@@ -42,6 +42,7 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [middleName, setMiddleName] = useState('');
+  const [gender, setGender] = useState<string>('');
   const [phone, setPhone] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [doctorId, setDoctorId] = useState('');
@@ -54,6 +55,7 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
       setFirstName(existingPatient.firstName);
       setLastName(existingPatient.lastName);
       setMiddleName(existingPatient.middleName || '');
+      setGender(existingPatient.gender || '');
       setPhone(existingPatient.phone);
       setDateOfBirth(existingPatient.dateOfBirth);
       setDoctorId(existingPatient.doctorId);
@@ -61,6 +63,7 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
       setFirstName('');
       setLastName('');
       setMiddleName('');
+      setGender('');
       setPhone('');
       setDateOfBirth('');
       setDoctorId(selectedDoctorId === 'all' ? '' : selectedDoctorId || '');
@@ -83,12 +86,14 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
         if (existingPatient.phone !== formattedPhone) changes.push(`Телефон: ${existingPatient.phone} → ${formattedPhone}`);
         if (existingPatient.dateOfBirth !== dateOfBirth) changes.push(`Дата народження змінена`);
         if (existingPatient.doctorId !== doctorId) changes.push(`Лікар змінений`);
+        if ((existingPatient.gender || '') !== gender) changes.push(`Стать: ${existingPatient.gender === 'male' ? 'Ч' : existingPatient.gender === 'female' ? 'Ж' : '—'} → ${gender === 'male' ? 'Ч' : gender === 'female' ? 'Ж' : '—'}`);
       }
 
       updatePatient(patientId, {
         firstName,
         lastName,
         middleName,
+        gender: gender as 'male' | 'female' | undefined || undefined,
         phone: formattedPhone,
         dateOfBirth,
         doctorId,
@@ -108,6 +113,7 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
         firstName,
         lastName,
         middleName,
+        gender: gender as 'male' | 'female' | undefined || undefined,
         phone: formattedPhone,
         dateOfBirth,
         doctorId,
@@ -150,14 +156,28 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="middleName">По-батькові</Label>
-            <Input
-              id="middleName"
-              value={middleName}
-              onChange={(e) => setMiddleName(e.target.value)}
-              placeholder="Олексійович"
-            />
+          <div className="grid grid-cols-[1fr_auto] gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="middleName">По-батькові</Label>
+              <Input
+                id="middleName"
+                value={middleName}
+                onChange={(e) => setMiddleName(e.target.value)}
+                placeholder="Олексійович"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Стать</Label>
+              <Select value={gender} onValueChange={setGender}>
+                <SelectTrigger className="w-[80px]">
+                  <SelectValue placeholder="—" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="male">Ч</SelectItem>
+                  <SelectItem value="female">Ж</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-2">
