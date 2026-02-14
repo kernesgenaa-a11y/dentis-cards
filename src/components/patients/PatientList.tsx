@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, Plus, User, Phone, MoreVertical, Trash2, Edit2, History, Filter } from 'lucide-react';
+import { Search, Plus, User, Phone, MoreVertical, Trash2, Edit2, History, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PatientModal, formatPhoneForDisplay } from './PatientModal';
 import { PatientHistoryModal } from './PatientHistoryModal';
 import { cn } from '@/lib/utils';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,6 +28,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface PatientListProps {
   onPatientSelect?: () => void;
@@ -35,13 +41,15 @@ interface PatientListProps {
 export function PatientList({ onPatientSelect }: PatientListProps) {
   const { 
     patients, 
+    doctors,
     selectedDoctorId, 
+    setSelectedDoctorId,
     selectedPatientId, 
     setSelectedPatientId,
     deletePatient,
     getPatientsByDoctor 
   } = useClinic();
-  const { canPerformAction } = useAuth();
+  const { canPerformAction, currentUser } = useAuth();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [genderFilter, setGenderFilter] = useState<string>('all');
@@ -50,7 +58,9 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
   const [editingPatient, setEditingPatient] = useState<string | null>(null);
   const [deletingPatient, setDeletingPatient] = useState<string | null>(null);
   const [historyPatient, setHistoryPatient] = useState<string | null>(null);
-  const { currentUser } = useAuth();
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [recentSearches, setRecentSearches] = useLocalStorage<string[]>('dental_recent_searches', []);
 
   const filteredPatients = useMemo(() => {
     const doctorPatients = selectedDoctorId === 'all' 
@@ -63,15 +73,12 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
     return doctorPatients.filter(p => {
-      // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
         const fullName = `${p.firstName} ${p.lastName} ${p.middleName || ''}`.toLowerCase();
         if (!fullName.includes(query) && !p.visits.some(v => v.date.includes(searchQuery))) return false;
       }
-      // Gender filter
       if (genderFilter !== 'all' && p.gender !== genderFilter) return false;
-      // New/Old filter
       if (newOldFilter === 'new' && new Date(p.createdAt) < twoWeeksAgo) return false;
       if (newOldFilter === 'old' && new Date(p.createdAt) >= twoWeeksAgo) return false;
       return true;
@@ -90,10 +97,23 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
     }
   };
 
-  const selectedPatient = patients.find(p => p.id === selectedPatientId);
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim()) {
+      setRecentSearches(prev => {
+        const filtered = prev.filter(s => s !== searchQuery.trim());
+        return [searchQuery.trim(), ...filtered].slice(0, 3);
+      });
+    }
+    setIsSearchFocused(false);
+  };
+
+  const handleRecentSearchClick = (query: string) => {
+    setSearchQuery(query);
+    setIsSearchFocused(false);
+  };
 
   return (
-    <Card className="w-full md:w-80 flex flex-col h-full animate-slide-in border-0 md:border shadow-none md:shadow-sm bg-muted/10">
+    <Card className="w-full flex flex-col h-full animate-slide-in border-0 md:border shadow-none md:shadow-sm bg-muted/10">
       <CardHeader className="border-b shrink-0">
         <div className="flex flex-col-reverse md:flex-row items-stretch md:items-center justify-between gap-2 md:gap-0 mb-3">
           <CardTitle className="font-heading text-lg order-2 md:order-1">Пацієнти</CardTitle>
@@ -104,37 +124,83 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
             </Button>
           )}
         </div>
+        
+        {/* Search with recent searches */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Пошук за ім'ям або датою..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearchSubmit()}
             className="pl-9"
           />
+          {isSearchFocused && !searchQuery && recentSearches.length > 0 && (
+            <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-popover border rounded-md shadow-md p-1">
+              <p className="text-[10px] text-muted-foreground px-2 py-1">Останні пошуки</p>
+              {recentSearches.map((s, i) => (
+                <button
+                  key={i}
+                  className="w-full text-left text-sm px-2 py-1.5 rounded hover:bg-muted truncate"
+                  onMouseDown={() => handleRecentSearchClick(s)}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="flex gap-2 mt-2">
-          <Select value={genderFilter} onValueChange={setGenderFilter}>
-            <SelectTrigger className="h-8 text-xs flex-1">
-              <SelectValue placeholder="Стать" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Усі</SelectItem>
-              <SelectItem value="male">Ч</SelectItem>
-              <SelectItem value="female">Ж</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={newOldFilter} onValueChange={setNewOldFilter}>
-            <SelectTrigger className="h-8 text-xs flex-1">
-              <SelectValue placeholder="Новий/Старий" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Усі</SelectItem>
-              <SelectItem value="new">Новий</SelectItem>
-              <SelectItem value="old">Старий</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+
+        {/* Advanced filters toggle */}
+        <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="w-full mt-2 h-7 text-xs text-muted-foreground">
+              <Filter className="w-3 h-3 mr-1" />
+              Розширений
+              {isAdvancedOpen ? <ChevronUp className="w-3 h-3 ml-1" /> : <ChevronDown className="w-3 h-3 ml-1" />}
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-2 space-y-2">
+            {/* Doctor filter */}
+            <Select value={selectedDoctorId || ''} onValueChange={setSelectedDoctorId}>
+              <SelectTrigger className="h-8 text-xs">
+                <SelectValue placeholder="Лікар" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Всі лікарі</SelectItem>
+                {doctors.map(doctor => (
+                  <SelectItem key={doctor.id} value={doctor.id}>
+                    {doctor.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="flex gap-2">
+              <Select value={genderFilter} onValueChange={setGenderFilter}>
+                <SelectTrigger className="h-8 text-xs flex-1">
+                  <SelectValue placeholder="Стать" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Усі</SelectItem>
+                  <SelectItem value="male">Ч</SelectItem>
+                  <SelectItem value="female">Ж</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={newOldFilter} onValueChange={setNewOldFilter}>
+                <SelectTrigger className="h-8 text-xs flex-1">
+                  <SelectValue placeholder="Новий/Старий" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Усі</SelectItem>
+                  <SelectItem value="new">Новий</SelectItem>
+                  <SelectItem value="old">Старий</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       </CardHeader>
       
       <CardContent className="flex-1 p-0 overflow-hidden">
@@ -162,7 +228,7 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
                       onClick={() => handlePatientClick(patient.id)}
                     >
                       <div className="flex items-start justify-between">
-                          <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0">
                           <h4 className="font-medium truncate">
                             {patient.lastName} {patient.firstName} {patient.middleName || ''}
                           </h4>
@@ -174,7 +240,6 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
                           </div>
                         </div>
                         
-                        {/* Three-dot menu */}
                         {(canPerformAction('edit', 'patient') || canPerformAction('delete', 'patient')) && (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -235,7 +300,6 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
         </ScrollArea>
       </CardContent>
 
-      {/* Add/Edit Patient Modal */}
       <PatientModal
         isOpen={isAddingPatient || editingPatient !== null}
         onClose={() => {
@@ -245,7 +309,6 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
         patientId={editingPatient}
       />
 
-      {/* Delete Confirmation */}
       <AlertDialog open={deletingPatient !== null} onOpenChange={() => setDeletingPatient(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -263,7 +326,6 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* History Modal */}
       <PatientHistoryModal
         isOpen={historyPatient !== null}
         onClose={() => setHistoryPatient(null)}

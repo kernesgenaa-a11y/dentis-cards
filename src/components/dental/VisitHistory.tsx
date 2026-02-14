@@ -32,7 +32,7 @@ export function VisitHistory({ patientId }: VisitHistoryProps) {
   const [isAddingVisit, setIsAddingVisit] = useState(false);
   const [deletingVisitId, setDeletingVisitId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   
   const patient = patients.find(p => p.id === patientId);
   if (!patient) return null;
