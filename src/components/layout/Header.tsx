@@ -10,9 +10,6 @@ import { Stethoscope, LogOut, User, Shield } from 'lucide-react';
 export function Header() {
   const {
     clinicName,
-    doctors,
-    selectedDoctorId,
-    setSelectedDoctorId
   } = useClinic();
   const {
     currentUser,
@@ -57,27 +54,6 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-1 md:gap-4">
-          {/* Doctor Selection */}
-          <div className="flex items-center gap-1 md:gap-2">
-            <span className="text-xs md:text-sm opacity-80 hidden md:inline">Лікар:</span>
-            <Select value={selectedDoctorId || ''} onValueChange={setSelectedDoctorId}>
-              <SelectTrigger className="w-32 md:w-56 bg-white/10 border-white/20 text-primary-foreground text-xs md:text-sm h-8 md:h-10">
-                <SelectValue placeholder="Оберіть лікаря" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">
-                  <span className="text-sm font-medium">Всі лікарі</span>
-                </SelectItem>
-                {doctors.map(doctor => <SelectItem key={doctor.id} value={doctor.id}>
-                    <div className="flex flex-col">
-                      <span className="text-sm">{doctor.name}</span>
-                      <span className="text-xs text-muted-foreground hidden md:block">{doctor.specialty}</span>
-                    </div>
-                  </SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* User Menu */}
           {currentUser && <DropdownMenu>
               <DropdownMenuTrigger asChild>
