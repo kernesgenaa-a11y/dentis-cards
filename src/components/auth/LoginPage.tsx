@@ -109,7 +109,8 @@ export function LoginPage() {
               <p className="text-xs font-medium text-muted-foreground mb-2">Демо дані для входу:</p>
               <div className="space-y-1 text-xs">
                 <p><span className="font-medium">Супер Адмін:</span> admin / admin123</p>
-                <p><span className="font-medium">Лікар:</span> doctor / doctor123</p>
+                <p><span className="font-medium">Верховський:</span> verkhovskyi / doctor123</p>
+                <p><span className="font-medium">АЄ:</span> anton / doctor123</p>
                 <p><span className="font-medium">Адміністратор:</span> reception / reception123</p>
               </div>
             </div>
