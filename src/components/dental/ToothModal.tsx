@@ -102,14 +102,13 @@ export function ToothModal({ isOpen, onClose, toothNumber, record, onSave }: Too
             <Label>Шаблон стану</Label>
             <Select value={templateId} onValueChange={handleTemplateChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Оберіть стан..." />
+                <SelectValue placeholder="Оберіть стан" />
               </SelectTrigger>
               <SelectContent>
                 {DENTAL_TEMPLATES.map(template => (
                   <SelectItem key={template.id} value={template.id}>
                     <div className="flex items-center gap-2">
-                      <span>{template.label}</span>
-                      <span className="text-xs text-muted-foreground">- {template.description}</span>
+                      <span>{template.label}</span>                      
                     </div>
                   </SelectItem>
                 ))}
@@ -123,7 +122,7 @@ export function ToothModal({ isOpen, onClose, toothNumber, record, onSave }: Too
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Додайте опис..."
+              placeholder="Додайте опис"
               rows={2}
             />
           </div>
@@ -134,7 +133,7 @@ export function ToothModal({ isOpen, onClose, toothNumber, record, onSave }: Too
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Додайте примітки..."
+              placeholder="Додайте примітки"
               rows={3}
             />
           </div>

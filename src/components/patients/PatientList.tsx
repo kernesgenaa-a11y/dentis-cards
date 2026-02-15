@@ -129,7 +129,7 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Пошук за ім'ям або датою..."
+            placeholder="Пошук"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
@@ -183,7 +183,7 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
                   <SelectValue placeholder="Стать" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Усі</SelectItem>
+                  <SelectItem value="all">Любої статі</SelectItem>
                   <SelectItem value="male">Ч</SelectItem>
                   <SelectItem value="female">Ж</SelectItem>
                 </SelectContent>
@@ -193,7 +193,7 @@ export function PatientList({ onPatientSelect }: PatientListProps) {
                   <SelectValue placeholder="Новий/Старий" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Усі</SelectItem>
+                  <SelectItem value="all">Будьколи доданий</SelectItem>
                   <SelectItem value="new">Новий</SelectItem>
                   <SelectItem value="old">Старий</SelectItem>
                 </SelectContent>

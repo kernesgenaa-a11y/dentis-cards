@@ -206,12 +206,12 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
             <Label>Лікар</Label>
             <Select value={doctorId} onValueChange={setDoctorId} required>
               <SelectTrigger>
-                <SelectValue placeholder="Оберіть лікаря..." />
+                <SelectValue placeholder="Оберіть лікаря" />
               </SelectTrigger>
               <SelectContent>
                 {doctors.map(doc => (
                   <SelectItem key={doc.id} value={doc.id}>
-                    {doc.name} — {doc.specialty}
+                    {doc.name}
                   </SelectItem>
                 ))}
               </SelectContent>
