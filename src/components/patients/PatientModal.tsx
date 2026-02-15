@@ -140,7 +140,7 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
                 id="lastName"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                placeholder="Петренко"
+                placeholder=""
                 required
               />
             </div>
@@ -150,7 +150,7 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
                 id="firstName"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                placeholder="Іван"
+                placeholder=""
                 required
               />
             </div>
@@ -163,7 +163,7 @@ export function PatientModal({ isOpen, onClose, patientId }: PatientModalProps) 
                 id="middleName"
                 value={middleName}
                 onChange={(e) => setMiddleName(e.target.value)}
-                placeholder="Олексійович"
+                placeholder=""
               />
             </div>
             <div className="space-y-2">
