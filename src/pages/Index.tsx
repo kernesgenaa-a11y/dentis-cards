@@ -8,6 +8,7 @@ import { DentalChart } from '@/components/dental/DentalChart';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const Index = () => {
   const { currentUser } = useAuth();
@@ -49,9 +50,16 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-1 flex flex-row p-4 gap-4 overflow-hidden">
-        <PatientList />
-        <DentalChart />
+      <main className="flex-1 overflow-hidden p-4">
+        <ResizablePanelGroup direction="horizontal" className="h-full rounded-lg">
+          <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
+            <PatientList />
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel defaultSize={70} minSize={40}>
+            <DentalChart />
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </main>
     </div>
   );
