@@ -55,7 +55,7 @@ function getToothImage(toothNumber: number, isUpper: boolean): { imageNumber: nu
 export function Tooth({ number, isUpper, record, isSelected, onClick, alignBottom = false }: ToothProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const hasIssue = record && (record.description || record.files.length > 0);
+  const hasIssue = record && (record.description || record.notes || record.files.length > 0);
   
   const { imageNumber, mirrored } = getToothImage(number, isUpper);
   const imagePath = `/teeth/${imageNumber}.png`;

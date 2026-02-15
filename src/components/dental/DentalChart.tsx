@@ -54,7 +54,7 @@ export function DentalChart() {
     }
   };
 
-  const issueCount = patient.dentalChart.filter(t => t.description || t.files.length > 0).length;
+  const issueCount = patient.dentalChart.filter(t => t.description || t.notes || t.files.length > 0).length;
 
   return (
     <Card className="flex-1 overflow-hidden animate-fade-in bg-muted/5">
