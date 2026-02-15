@@ -55,7 +55,7 @@ function getToothImage(toothNumber: number, isUpper: boolean): { imageNumber: nu
 export function Tooth({ number, isUpper, record, isSelected, onClick, alignBottom = false }: ToothProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const hasIssue = record && (record.description || record.notes || record.files.length > 0);
+  const hasIssue = !!(record && (record.description || record.notes || record.files.length > 0));
   
   const { imageNumber, mirrored } = getToothImage(number, isUpper);
   const imagePath = `/teeth/${imageNumber}.png`;
@@ -71,6 +71,9 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    // Clear canvas immediately
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -155,7 +158,7 @@ export function Tooth({ number, isUpper, record, isSelected, onClick, alignBotto
     };
 
     img.src = imagePath;
-  }, [imagePath, mirrored, hasIssue]);
+  }, [imagePath, mirrored, hasIssue, record?.description, record?.notes, record?.files?.length, record?.templateId]);
 
   // Handle click only on non-transparent pixels
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
