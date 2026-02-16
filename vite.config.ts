@@ -7,7 +7,10 @@ import { componentTagger } from "lovable-tagger";
 // Repository name used for GitHub Pages base path
 const repoBase = '/dental-health-hub/';
 
+
+
 export default defineConfig(({ mode }) => ({
+
   server: {
     host: "::",
     port: 8080,
