@@ -9,7 +9,15 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use('*', cors());
+app.use('*', cors({
+  origin: [
+    'https://dentis-cards-9bm.pages.dev',
+    'https://16e26f40.dentis-cards-9bm.pages.dev'
+  ],
+  credentials: true,
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // Authentication Middleware for protected routes
 const authMiddleware = async (c: any, next: any) => {
