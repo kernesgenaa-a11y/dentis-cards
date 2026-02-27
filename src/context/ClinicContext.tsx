@@ -36,15 +36,20 @@ export function ClinicProvider({ children }: { children: React.ReactNode }) {
   const getDoctors = useCallback(async () => {
     if (!token) return;
     try {
+      console.log('Fetching doctors with token:', token.substring(0, 10) + '...');
       const res = await fetch(`${API_URL}/api/doctors`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      console.log('Doctors API response status:', res.status);
       if (res.ok) {
         const data = await res.json();
+        console.log('Doctors data received:', data);
         setDoctors(Array.isArray(data) ? data : []);
         if (Array.isArray(data) && data.length > 0 && !selectedDoctorId) {
           setSelectedDoctorId(data[0].id.toString());
         }
+      } else {
+        console.error('Failed to fetch doctors:', await res.text());
       }
     } catch (err) {
       console.error('Fetch doctors error:', err);
@@ -57,16 +62,20 @@ export function ClinicProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     try {
+      console.log('Fetching patients with token:', token.substring(0, 10) + '...');
       const res = await fetch(`${API_URL}/api/patients`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      console.log('Patients API response status:', res.status);
       
       if (!res.ok) {
+        console.error('Failed to fetch patients:', await res.text());
         setPatients([]);
         return;
       }
       
       const data = await res.json();
+      console.log('Patients data received:', data);
       
       // Sanitizing data to ensure UI components don't crash
       const patientList = Array.isArray(data) ? data : [];
