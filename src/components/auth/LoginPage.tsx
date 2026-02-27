@@ -105,21 +105,12 @@ export function LoginPage() {
             </form>
 
             {/* Demo Credentials */}
-            <div className="mt-6 p-4 rounded-lg bg-muted/50">
-              <p className="text-xs font-medium text-muted-foreground mb-2">Демо дані для входу:</p>
-              <div className="space-y-1 text-xs">
-                <p><span className="font-medium">Супер Адмін:</span> admin / admin123</p>
-                <p><span className="font-medium">Верховський:</span> verkhovskyi / doctor123</p>
-                <p><span className="font-medium">АЄ:</span> anton / doctor123</p>
-                <p><span className="font-medium">Адміністратор:</span> reception / reception123</p>
-              </div>
-            </div>
+            
           </CardContent>
         </Card>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
-          Працює офлайн • Дані зберігаються локально • Щотижневе резервне копіювання
-        </p>
+          Працює онлайн • Резервні копії на CloudFlare        </p>
       </div>
     </div>
   );
